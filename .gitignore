@@ -1,0 +1,6 @@
+*.xcworkspace/xcuserdata/
+xcuserdata/
+.DS_Store
+*.gz
+bin/*
+PrizmSDK/Installer/gcc
