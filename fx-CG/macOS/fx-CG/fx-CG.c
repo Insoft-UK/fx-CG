@@ -27,7 +27,7 @@ FXCG_DDRegister _fxCG_DDRegister = {
 };
 uint16_t _fxCG_0xFD801460 = 0xFFFF;
 
-unsigned short _fxCG_0xA44B0000[8]; // keyboard_register
+uint16_t _fxCG_0xA44B0000[5] = {0,0,0,0,0}; // keyboard_register
 
 // DRAM is RGB565 regardless of VRAM RGB565 or RGB111
 uint16_t _fxCG_DRAM[ FXCG_LCD_WIDTH * FXCG_LCD_HEIGHT ];
@@ -49,6 +49,17 @@ void fxCG_KeyDown(int keyCode) {
     int word = row >> 1;
     int bit = col + 8 * ( row & 1 );
     _fxCG_0xA44B0000[word] |= 1 << bit;
+    
+#ifdef DEBUG
+    printf("keyboard reg:- ");
+    for (int i=0; i<4; i++) {
+        for (int n=15; n>=0; n--) {
+            printf(_fxCG_0xA44B0000[i] & 1 << n ? "1" : "0");
+        }
+        if (i != 3) printf(" : ");
+    }
+    printf("\n");
+#endif
 }
 
 void fxCG_KeyUp(int keyCode) {
@@ -58,6 +69,17 @@ void fxCG_KeyUp(int keyCode) {
     int word = row >> 1;
     int bit = col + 8 * ( row & 1 );
     _fxCG_0xA44B0000[word] &= ~(1 << bit);
+    
+#ifdef DEBUG
+    printf("keyboard reg:- ");
+    for (int i=0; i<4; i++) {
+        for (int n=15; n>=0; n--) {
+            printf(_fxCG_0xA44B0000[i] & 1 << n ? "1" : "0");
+        }
+        if (i != 3) printf(" : ");
+    }
+    printf("\n");
+#endif
 }
 
 int fxCG_Range(int min, int max, int value) {
@@ -198,7 +220,7 @@ static uint16_t fxCG_GetPixelFromImage(int x, int y, FXCG_Image * image)
     return 0;
 }
 
-void fxCG_Load18x24CharactorSet( const char * file )
+void fxCG_LoadCharactorSet( const char * file )
 {
     FXCG_Image * pImage;
     pImage = fxCG_ImageWithContentsOfPBMFile(file);

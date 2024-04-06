@@ -60,7 +60,7 @@ typedef struct FXCG_Glyph {
 #pragma pack()   /* restore original alignment from stack */
 
 extern uint16_t _fxCG_0xFD801460;
-extern unsigned short _fxCG_0xA44B0000[8];
+extern uint16_t _fxCG_0xA44B0000[5];
 extern FXCG_DDRegister _fxCG_DDRegister;
 extern uint16_t _fxCG_DRAM[ FXCG_LCD_WIDTH * FXCG_LCD_HEIGHT ];
 extern uint16_t _fxCG_VRAM[ FXCG_SCREEN_WIDTH * FXCG_SCREEN_HEIGHT ];
@@ -110,7 +110,7 @@ extern "C" {
 int fxCG_Range(int min, int max, int value);
 void fxCG_DisplayRedraw(void *pixelData);
 
-void fxCG_Load18x24CharactorSet( const char * file );
+void fxCG_LoadCharactorSet( const char * file );
 void fxCG_KeyDown(int keyCode);
 void fxCG_KeyUp(int keyCode);
 

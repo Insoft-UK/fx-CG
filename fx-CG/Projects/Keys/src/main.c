@@ -20,30 +20,56 @@
  THE SOFTWARE.
  */
 
-import Cocoa
-import SpriteKit
-import GameplayKit
+#include "fx-CG.h"
+#include "graphics.h"
+#include "keyboard.h"
 
-class ViewController: NSViewController {
+#ifdef __clang__
+#include "fx-CG.h"
+static const unsigned short *keyboardRegister = _fxCG_0xA44B0000;
+#else
+static const unsigned short *keyboardRegister = (unsigned short*)0xA44B0000;
+#endif
 
-    @IBOutlet var skView: SKView!
+
+void Draw(void) {
+    int x,y;
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        if let url = Bundle.main.url(forResource: "Charset", withExtension: "pbm") {
-            if let file = NSString(string: url.path).utf8String {
-                fxCG_LoadCharactorSet(UnsafePointer<CChar>(file))
+    fillArea(0, 24, LCD_WIDTH_PX, LCD_HEIGHT_PX - 48, 0xFFFF);
+    
+    for (int r=0; r<5; r++) {
+        for (int n=15; n>=0; n--) {
+            x = 24 * n;
+            y = 20 * r + 24;
+            
+            
+            if (keyboardRegister[r] & 1 << n) {
+                // 1
+                fillArea(x, y, 24, 16, 0);
+            } else {
+                // 0
+                drawRect(x, y, 24, 16, 0);
             }
         }
-        
-
-        let scene:SKScene = GameScene.init()
-        scene.scaleMode = .aspectFill
-        scene.setScale(2)
-        skView.presentScene(scene)
-        
-        
     }
+    
+   
+    Bdisp_PutDisp_DD();
+}
+
+
+// MARK: - CASIO fxCG Add-In Application "main" Function
+int fxCG_g3a(void) {
+    // Switches the screen to full color mode (16 bits per pixel, RGB565)
+   
+    while (true) {
+        Draw();
+        keyUpdate();
+        
+        if (isKeyPressed(KeyCode_Menu))
+            break;
+    }
+    
+    return 0;
 }
 

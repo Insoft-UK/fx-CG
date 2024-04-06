@@ -80,16 +80,16 @@ class GameScene: SKScene {
             fxCG_KeyDown(KEY_PRGM_F5)
         case 97:
             fxCG_KeyDown(KEY_PRGM_F6)
-            
+        case 51:
+            fxCG_KeyDown(44)
         case 53:
             fxCG_KeyDown(KEY_PRGM_EXIT)
-            
         case 36:
             fxCG_KeyDown(KEY_PRGM_RETURN)
-            
         case 76:
             fxCG_KeyDown(KEY_PRGM_MENU)
-        
+        case 117:
+            fxCG_KeyDown(KEY_PRGM_ACON)
         case 29:
             fxCG_KeyDown(KEY_PRGM_0)
         case 18:
@@ -110,7 +110,6 @@ class GameScene: SKScene {
             fxCG_KeyDown(KEY_PRGM_8)
         case 25:
             fxCG_KeyDown(KEY_PRGM_9)
-            
         case 124:
             fxCG_KeyDown(KEY_PRGM_RIGHT)
         case 123:
@@ -140,16 +139,16 @@ class GameScene: SKScene {
             fxCG_KeyUp(KEY_PRGM_F5)
         case 97:
             fxCG_KeyUp(KEY_PRGM_F6)
-            
+        case 51:
+            fxCG_KeyUp(44)
         case 53:
             fxCG_KeyUp(KEY_PRGM_EXIT)
-            
         case 76:
             fxCG_KeyUp(KEY_PRGM_MENU)
-            
+        case 117:
+            fxCG_KeyUp(KEY_PRGM_ACON)
         case 36:
             fxCG_KeyUp(KEY_PRGM_RETURN)
-        
         case 29:
             fxCG_KeyUp(KEY_PRGM_0)
         case 18:
@@ -170,7 +169,6 @@ class GameScene: SKScene {
             fxCG_KeyUp(KEY_PRGM_8)
         case 25:
             fxCG_KeyUp(KEY_PRGM_9)
-            
         case 124:
             fxCG_KeyUp(KEY_PRGM_RIGHT)
         case 123:

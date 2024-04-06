@@ -39,10 +39,7 @@ typedef enum KeyCode {
 
 
 void keyUpdate(void);
-int keyDownLast(KeyCode keyCode);
-int keyDownHold(KeyCode keyCode);
-bool isKeyDown(KeyCode keyCode);
-bool isKeyUp(KeyCode keyCode);
+bool isKeyHeld(KeyCode keyCode);
 bool isKeyPressed(KeyCode keyCode);
 bool isKeyReleased(KeyCode keyCode);
 

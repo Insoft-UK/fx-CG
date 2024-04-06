@@ -34,110 +34,112 @@
  to indicate the key press event. Conversely, when a key is released, the corresponding
  bit or bits are cleared to indicate the key release event.
  
-                                                                 Row : 16bit (reg)
- +-------------------------------------------------------------+
- |   [F1]    [F2]    [F3]    [F4]    [F5]    [F6]              | 9 = (4)
- |                                                             |
- |   [SHIFT] [OPTN] [VARS] [MENU]      [ UP ]                  | 8 = (4)
- |                                [LEFT]  [RIGHT]              |
- |   [ALPHA] [X^2]  [x√]   [EXIT]      [DOWN]                  | 7 = (3)
- |                                                             |
- |   [X,T,θ,n]   [LOG]  [LN]  [SIN]  [COS]  [TAN]              | 6 = (3)
- |                                                             |
- |   [abc] [S<>D]      [(]   [)]   [,]     [STOR]              | 5 = (2)
- |                                                             |
- |   [7]   [8]   [9]               [DEL]                       | 4 = (2)
- |                                                             |
- |   [4]   [5]   [6]               [x]        [/]              | 3 = (1)
- |                                                             |
- |   [1]   [2]   [3]               [+]        [-]              | 2 = (1)
- |                                                             |
- |   [0]   [.]               [PI]  [(-)]    [EXE]              | 1 = (0)
- |                                                             |
- |                                                   [AC/ON]   | 0 = (0)
- +-------------------------------------------------------------+
- Col  7       6       5       4       3       2       1
+                                                                 Row : 16-bit (reg 0-4)
+     +-----------------------------------------------------------------------+
+     |   [F1]      [F2]      [F3]      [F4]      [F5]      [F6]              | 9 = (4)
+     |                                                                       |
+     |   [SHIFT]   [OPTN]    [VARS]    [MENU]    [LEFT]    [ UP ]            | 8 = (4)
+     |                                                                       |
+     |   [ALPHA]   [X^2]     [x√]      [EXIT]    [DOWN]    [RIGHT]           | 7 = (3)
+     |                                                                       |
+     |   [X,T,θ,n] [LOG]     [LN]      [SIN]     [COS]     [TAN]             | 6 = (3)
+     |                                                                       |
+     |   [abc]     [S<>D]    [(]       [)]       [,]       [-->]             | 5 = (2)
+     |                                                                       |
+     |   [7]       [8]       [9]       [DEL]                                 | 4 = (2)
+     |                                                                       |
+     |   [4]       [5]       [6]       [x]       [/]                         | 3 = (1)
+     |                                                                       |
+     |   [1]       [2]       [3]       [+]       [-]                         | 2 = (1)
+     |                                                                       |
+     |   [0]       [.]       [PI]      [(-)]     [EXE]                       | 1 = (0)
+     |                                                                       |
+     |                                                               [AC/ON] | 0 = (0)
+     +-----------------------------------------------------------------------+
+  Col    7         6         5         4         3         2         1
  
- (?) = Row / 2
-    (0)      (1)      (2)      (3)
- [15...0] [15...0] [15...0] [15...0]
+ *Bit    9         10        11        12        13        14        15
+**Bit    1         2         3         4         5         6         7
  
- [Bit] =  Col + 8 * (row & 1)
+ * When Row is even
+** When Row is odd
+ 
  */
 
 #ifdef __clang__
 #include "fx-CG.h"
-static const unsigned short *keyboardRegister = _fxCG_0xA44B0000;
+
+#define FXCG50_KEY_REG _fxCG_0xA44B0000
 #else
-static const unsigned short *keyboardRegister = (unsigned short*)0xA44B0000;
+#define FXCG50_KEY_REG 0xA44B0000
 #endif
 
-static unsigned short lastKey[8];
-static unsigned short holdKey[8];
+static const uint16_t *_keyboardRegister = (uint16_t *)FXCG50_KEY_REG;
 
+static struct {
+    uint16_t held[5];
+    uint16_t last[5];   // Key/s that were last held down.
+    uint16_t pressed[5];
+    uint16_t released[5];
+} key;
+
+
+/**
+ @brief    Takes a key reading of the keyboard register.
+ */
 void keyUpdate(void) {
-    memcpy(holdKey, lastKey, sizeof(unsigned short)*8);
-    memcpy(lastKey, keyboardRegister, sizeof(unsigned short)*8);
+    memcpy(key.held, _keyboardRegister, 10);
+    for (int i=0; i<5; i++) {
+        key.pressed[i] = ~key.last[i] & key.held[i];
+        key.released[i] = key.last[i] & ~key.held[i];
+    }
+    memcpy(key.last, key.held, 10);
 }
 
 /**
- @brief    Returns 1 if key has been pressed during last keyUpdate() call, 0 otherwise.
- @param    keyCode The fx-CGxx key code.
+ @brief    Returns true if key has is being held down.
+ @param    keyCode  The fx-CGxx key code.
+ 
+ keyUpdate not required.
  */
-int keyDownLast(KeyCode keyCode) {
+bool isKeyHeld(KeyCode keyCode) {
     int row = keyCode % 10;
     int col = keyCode / 10 - 1;
     
     int word = row >> 1;
-    int bit = col + 8 * ( row & 1 );
+    int bit = col + ((row & 1) << 3);
     
-    if ((lastKey[word] & 1<<bit) != 0) return 1;
-    return 0;
-}
-
-/**
- @brief    Returns 1 if key has been pressed two keyUpdate() calls ago, 0 otherwise.
- @param    keyCode  The fx-CGxx key code.
- */
-int keyDownHold(KeyCode keyCode) {
-    int row = keyCode % 10;
-    int col = keyCode / 10 - 1;
-    
-    int word = row >> 1;
-    int bit = col + 8 * ( row & 1 );
-    
-    if ((lastKey[word] & 1<<bit) != 0) return 1;
-    return 0;
-}
-
-/**
- @brief    Returns true if key has been held down for a while.
- @param    keyCode  The fx-CGxx key code.
- */
-bool isKeyDown(KeyCode keyCode) {
-    return (keyDownLast(KeyCode_Menu) && keyDownHold(KeyCode_Menu));
-}
-
-/**
- @brief    Returns true if key has NOT been held down for a while.
- @param    keyCode  The fx-CGxx key code.
- */
-bool isKeyUp(KeyCode keyCode) {
-    return (!keyDownLast(KeyCode_Menu) && keyDownHold(KeyCode_Menu));
+    return (0 != (_keyboardRegister[word] & 1<<bit));
 }
 
 /**
  @brief    Returns true if key has just been pressed.
  @param    keyCode  The fx-CGxx key code.
+ 
+ keyUpdate required before using this function.
  */
 bool isKeyPressed(KeyCode keyCode) {
-    return (keyDownLast(KeyCode_Menu) && !keyDownHold(KeyCode_Menu));
+    int row = keyCode % 10;
+    int col = keyCode / 10 - 1;
+    
+    int word = row >> 1;
+    int bit = col + ((row & 1) << 3);
+    
+    return (0 != (key.pressed[word] & 1<<bit));
 }
 
 /**
  @brief    Returns true if key has just been released
  @param    keyCode  The fx-CGxx key code.
+ 
+ keyUpdate required before using this function.
  */
 bool isKeyReleased(KeyCode keyCode) {
-    return (!keyDownLast(KeyCode_Menu) && keyDownHold(KeyCode_Menu));
+    int row = keyCode % 10;
+    int col = keyCode / 10 - 1;
+    
+    int word = row >> 1;
+    int bit = col + ((row & 1) << 3);
+    
+    return (0 != (key.released[word] & 1<<bit));
 }

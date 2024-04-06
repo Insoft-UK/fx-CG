@@ -152,6 +152,7 @@ void Print_OS(const char* msg, int invers, int zero2)
     _fxCG_Cursor.x = fxCG_Range(0, 20, _fxCG_Cursor.x + 1);
 }
 
+
 void PrintCXY( int x, int y, const char *cptr, int mode_flags, int P5, int color, int back_color, int P8, int P9 )
 {
     unsigned char * c = (unsigned char *)cptr;
@@ -168,6 +169,10 @@ void PrintCXY( int x, int y, const char *cptr, int mode_flags, int P5, int color
 }
 
 
+void PrintXY( int x, int y, const char *string, int mode, int color ) {
+    
+    PrintCXY(x, y, string, mode, 0, color, Bdisp_GetPoint_VRAM(x, y), 0, 0);
+}
 
 
 void DrawFrame( color_t color )
