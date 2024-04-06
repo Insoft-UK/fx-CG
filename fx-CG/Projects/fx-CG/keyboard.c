@@ -83,7 +83,6 @@ static struct {
     uint16_t released[5];
 } key;
 
-
 /**
  @brief    Takes a key reading of the keyboard register.
  */
@@ -97,19 +96,28 @@ void keyUpdate(void) {
 }
 
 /**
- @brief    Returns true if key has is being held down.
+ @brief    Returns true if key has is being hold down.
  @param    keyCode  The fx-CGxx key code.
- 
- keyUpdate not required.
+ @param    data The status data of the keyboard.
  */
-bool isKeyHeld(KeyCode keyCode) {
+static bool isKeyHold(KeyCode keyCode, const uint16_t *data) {
     int row = keyCode % 10;
     int col = keyCode / 10 - 1;
     
     int word = row >> 1;
     int bit = col + ((row & 1) << 3);
     
-    return (0 != (_keyboardRegister[word] & 1<<bit));
+    return (0 != (data[word] & 1<<bit));
+}
+
+/**
+ @brief    Returns true if key has is being held down.
+ @param    keyCode  The fx-CGxx key code.
+ 
+ keyUpdate not required.
+ */
+bool isKeyHeld(KeyCode keyCode) {
+    return isKeyHold(keyCode, _keyboardRegister);
 }
 
 /**
@@ -119,13 +127,7 @@ bool isKeyHeld(KeyCode keyCode) {
  keyUpdate required before using this function.
  */
 bool isKeyPressed(KeyCode keyCode) {
-    int row = keyCode % 10;
-    int col = keyCode / 10 - 1;
-    
-    int word = row >> 1;
-    int bit = col + ((row & 1) << 3);
-    
-    return (0 != (key.pressed[word] & 1<<bit));
+    return isKeyHold(keyCode, key.pressed);
 }
 
 /**
@@ -135,11 +137,5 @@ bool isKeyPressed(KeyCode keyCode) {
  keyUpdate required before using this function.
  */
 bool isKeyReleased(KeyCode keyCode) {
-    int row = keyCode % 10;
-    int col = keyCode / 10 - 1;
-    
-    int word = row >> 1;
-    int bit = col + ((row & 1) << 3);
-    
-    return (0 != (key.released[word] & 1<<bit));
+    return isKeyHold(keyCode, key.released);
 }

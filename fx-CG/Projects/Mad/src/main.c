@@ -165,14 +165,14 @@ static int data[] = {
 
 int Splash(void) {
     fillArea(0, 0, LCD_WIDTH_PX, LCD_HEIGHT_PX, kColor_White);
-    print((LCD_WIDTH_PX - strlen("PRESS [ESC] KEY") * 6) / 2, LCD_HEIGHT_PX - 22, "PRESS [ESC] KEY", kColor_Black, kColor_White, 1, 2);
+    print((LCD_WIDTH_PX - strlen("PRESS [EXE] KEY") * 6) / 2, LCD_HEIGHT_PX - 22, "PRESS [EXE] KEY", kColor_Black, kColor_White, 1, 2);
     print((LCD_WIDTH_PX - strlen(COPYRIGHT) * 6) / 2, 4, COPYRIGHT, kColor_Black, kColor_White, 1, 1);
     Bdisp_PutDisp_DD();
     
     while (true) {
         keyUpdate();
         
-        if (isKeyPressed(KeyCode_Exit))
+        if (isKeyPressed(KeyCode_Return))
             return 0;
         
         if (isKeyPressed(KeyCode_Menu))
@@ -231,7 +231,7 @@ int fxCG_g3a(void) {
     while (true) {
         keyUpdate();
         
-        if (isKeyPressed(KeyCode_Exit))
+        if (isKeyPressed(KeyCode_Exit) | isKeyPressed(KeyCode_Menu))
             break;
     }
     
