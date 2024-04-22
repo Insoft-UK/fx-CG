@@ -4,8 +4,8 @@ xcuserdata/
 *.gz
 bin/*
 PrizmSDK/Installer/gcc
-fx-CG/Projects/fx-CG
-fx-CG/Projects/Mad
-fx-CG/Projects/Shuttle/*
-fx-CG/Projects/Ratio
-fx-CG/Projects/Charset
+fx-CG/Projects/fx-CG/
+fx-CG/Projects/Mad/
+fx-CG/Projects/Shuttle/
+fx-CG/Projects/Ratio/
+fx-CG/Projects/Charset/
