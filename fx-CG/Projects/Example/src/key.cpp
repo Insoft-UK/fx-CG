@@ -20,12 +20,11 @@
  THE SOFTWARE.
  */
 
-#include "keyboard.h"
+#include "key.hpp"
 
-#include <string.h>
 
 /*
- The Casio fx-CG50, like many calculators and embedded systems, handles key presses 
+ The Casio fx-CG50, like many calculators and embedded systems, handles key presses
  at a low level through direct memory access (DMA) to a specific memory-mapped register.
  Each key on the calculator corresponds to a specific bit or set of bits within this
  register.
@@ -74,6 +73,15 @@
 #define FXCG50_KEY_REG 0xA44B0000
 #endif
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <string.h>
+
+
+using namespace fxCG;
+
 static const uint16_t *_keyboardRegister = (uint16_t *)FXCG50_KEY_REG;
 
 static struct {
@@ -81,7 +89,7 @@ static struct {
     uint16_t last[5];   // Key/s that were last held down.
     uint16_t pressed[5];
     uint16_t released[5];
-} key = {
+} _key = {
     {0,0,0,0,0},
     {0,0,0,0,0},
     {0,0,0,0,0},
@@ -89,43 +97,45 @@ static struct {
 };
 
 
-void fxKeyUpdate(void)
-{
-    memcpy(key.held, _keyboardRegister, 10);
-    for (int i=0; i<5; i++) {
-        key.pressed[i] = ~key.last[i] & key.held[i];
-        key.released[i] = key.last[i] & ~key.held[i];
-    }
-    memcpy(key.last, key.held, 10);
-}
-
-void fxKeyReset(void)
+void key::update(void)
 {
     for (int i=0; i<5; i++) {
-        key.held[i] = 0;
-        key.last[i] = 0;
-        key.pressed[i] = 0;
-        key.released[i] = 0;
+        _key.held[i] = _keyboardRegister[i];
+        
+        _key.pressed[i] = ~_key.last[i] & _key.held[i];
+        _key.released[i] = _key.last[i] & ~_key.held[i];
+        
+        _key.last[i] = _key.held[i];
     }
 }
 
-KeyCode fxKeyPressed(void)
+void key::reset(void)
 {
-    uint8_t *pressed = (uint8_t *)key.pressed;
+    for (int i=0; i<5; i++) {
+        _key.held[i] = 0;
+        _key.last[i] = 0;
+        _key.pressed[i] = 0;
+        _key.released[i] = 0;
+    }
+}
+
+key::Code key::pressed(void)
+{
+    uint8_t *pressed = (uint8_t *)_key.pressed;
     int row;
     for (row = 0; row <= 9; row++) {
         if (*pressed) {
             // Key pressed ?
             for (int col=0; col<=7; col++) {
                 if (*pressed & (1 << col)) {
-                    return (col + 1) * 10 + row;
+                    return (Code)((col + 1) * 10 + row);
                 }
             }
-            return KeyCode_NONE;
+            return NONE;
         }
         pressed++;
     }
-    return KeyCode_NONE;
+    return NONE;
 }
 
 /**
@@ -133,7 +143,7 @@ KeyCode fxKeyPressed(void)
  @param    keyCode  The fx-CGxx key code.
  @param    data The status data of the keyboard.
  */
-static bool fxIsKeyHold(KeyCode keyCode, const uint16_t *data)
+static bool fxIsKeyHold(key::Code keyCode, const uint16_t *data)
 {
     int row = keyCode % 10;
     int col = keyCode / 10 - 1;
@@ -145,20 +155,19 @@ static bool fxIsKeyHold(KeyCode keyCode, const uint16_t *data)
 }
 
 
-bool fxIsKeyHeld(KeyCode keyCode)
+bool key::isHeld(key::Code keyCode)
 {
     return fxIsKeyHold(keyCode, _keyboardRegister);
 }
 
 
-bool fxIsKeyPressed(KeyCode keyCode)
+bool key::isPressed(key::Code keyCode)
 {
-    return fxIsKeyHold(keyCode, key.pressed);
+    return fxIsKeyHold(keyCode, _key.pressed);
 }
 
 
-bool fxIsKeyReleased(KeyCode keyCode)
+bool key::isReleased(key::Code keyCode)
 {
-    return fxIsKeyHold(keyCode, key.released);
+    return fxIsKeyHold(keyCode, _key.released);
 }
-

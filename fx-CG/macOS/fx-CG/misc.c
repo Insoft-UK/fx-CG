@@ -21,32 +21,69 @@
  */
 
 #include "fx-CG.h"
-#include <unistd.h>
 
-void OS_InnerWait_ms(int ms)
+int ItoA_10digit(int value, unsigned char *result)
 {
-    usleep(ms * 1000);
-}
-
-int MB_ElementCount(const char* buf)
-{
-    int length = 0;
-    uint8_t *p = (uint8_t *)buf;
+    bool isNeg=false;
+    if(value < 0)
+        isNeg = true;
+    
+    int idx = 0;
     do {
-        if (*p >= 0 && *p <= 0x7E) {
-            p++;
-            length++;
-        }
-        if (*p > 0x7E) {
-            p+=2;
-            length++;
-        }
-    } while (*p != 0);
-    return length;
+        int j = value % 10;
+        j = j < 0 ? j * -1 : j ;
+        result[idx++]=j+48;
+        value=value/10;
+    } while (value!=0);
+    if(isNeg)
+        result[idx++]='-';
+    result[idx]='\0';
+    
+    int j = idx-1;
+    int i=0;
+    while (i<j) {
+        char tmp = result[j];
+        result[j] = result[i];
+        result[i] = tmp;
+        i++;
+        j--;
+    }
+    
+    return  0;
 }
-
-
-void TakeScreenshot(void)
+void ByteToHex( unsigned char value, unsigned char*result )
 {
     
+}
+void HexToByte( unsigned char*value, unsigned char*result )
+{
+    
+}
+void HexToNibble( unsigned char value, unsigned char*result )
+{
+    
+}
+void HexToWord( unsigned char*value, unsigned short*result )
+{
+    
+}
+void itoa( int value, unsigned char*result )
+{
+    
+}
+void LongToAscHex( int, unsigned char*, int )
+{
+    
+}
+void NibbleToHex( unsigned char value, unsigned char*result )
+{
+    
+}
+void WordToHex( unsigned short value, unsigned char*result )
+{
+    
+}
+int BCDtoInternal( void *target, void *source )
+{
+    return 0;
 }

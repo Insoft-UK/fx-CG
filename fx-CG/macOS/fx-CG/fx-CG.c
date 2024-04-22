@@ -35,10 +35,13 @@ uint16_t _fxCG_DRAM[ FXCG_LCD_WIDTH * FXCG_LCD_HEIGHT ];
 uint16_t _fxCG_VRAM[ FXCG_SCREEN_WIDTH * FXCG_SCREEN_HEIGHT ];
 bool _fxCG_StatusArea = true;
 FXCG_Cursor _fxCG_Cursor;
-FXCG_Glyph _fxCG_Glyphs[95];
 
 // MARK: - Internal Private Functions
 
+uint16_t *fxCGGetVRAM(void)
+{
+    return _fxCG_VRAM;
+}
 
 // MARK: - Internal Private Functions
 
@@ -141,115 +144,5 @@ void fxCG_DisplayRedraw( void *pixelData )
     }
 }
 
-static FXCG_Image * fxCG_ImageWithContentsOfPBMFile(const char *file)
-{
-    FILE *fp = fopen(file, "rb");
-    if (fp == NULL) return NULL;
-    
-    FXCG_Image * pImage = malloc(sizeof(FXCG_Image));
-    if (!pImage) {
-        fclose(fp);
-        return NULL;
-    }
-    
-    fseek(fp, 3, SEEK_SET);
-    char *line;
-    size_t len;
-    
-    line = fgetln(fp, &len);
-    if (!line) {
-        fclose(fp);
-        free(pImage);
-        return NULL;
-    }
-    // width
-    *(line + (len - 1)) = '\0';
-    pImage->width = atoi(line);
-    
-    
-    line = fgetln(fp, &len);
-    if (!line) {
-        fclose(fp);
-        free(pImage);
-        return NULL;
-    }
-    // height
-    *(line + (len - 1)) = '\0';
-    pImage->height = atoi(line);
 
-    if (pImage->width % 8 != 0) {
-        pImage->length = (pImage->width + (8 - (pImage->width % 8))) * pImage->height / 8;
-    }
-    else
-    {
-        pImage->length = pImage->width * pImage->height / 8;
-    }
-    
-    pImage->bytes = malloc(pImage->length);
-    if (!pImage->bytes) {
-        fclose(fp);
-        free(pImage);
-        return NULL;
-    }
-    
-    fread(pImage->bytes, sizeof(char), pImage->length, fp);
-    
-    
-    fclose(fp);
-    return pImage;
-}
 
-static uint16_t fxCG_GetPixelFromImage(int x, int y, FXCG_Image * image)
-{
-    uint8_t *ptr = image->bytes;
-    int n = x & 7;
-    int srcw;
-    
-    if (image->width % 8 != 0) {
-        srcw = (image->width + (8 - (image->width % 8))) / 8;
-    }
-    else
-    {
-        srcw = image->width / 8;
-    }
-    
-    int mask = 0x80 >> n;
-    uint8_t byte = ptr[( x / 8 ) + ( y * srcw )];
-    if (byte & mask) return 1;
-    
-    return 0;
-}
-
-void fxCG_LoadCharactorSet( const char * file )
-{
-    FXCG_Image * pImage;
-    pImage = fxCG_ImageWithContentsOfPBMFile(file);
-    
-    int glyph = 0; // ! first glyph
-    
-    if (pImage != NULL)
-    {
-        for (int y = 0; y < pImage->height; y += 24)
-        {
-            for (int x = 0; x < pImage->width; x += 18) {
-                // Glyphs 18 x 24
-                for (int row = 0; row < 24; row++)
-                {
-                    _fxCG_Glyphs[glyph].data[row] = 0b11111111111111000000000000000000;
-                    int mask = 0b00000000000000100000000000000000;
-                    for (int n = 0; n < 18; n++)
-                    {
-                        if (fxCG_GetPixelFromImage(x + n, y + row, pImage) == 1)
-                        {
-                            _fxCG_Glyphs[glyph].data[row] |= mask;
-                        }
-                        mask >>= 1;
-                    }
-                }
-                glyph++;
-            }
-        }
-        free(pImage->bytes);
-        free(pImage);
-    }
-}

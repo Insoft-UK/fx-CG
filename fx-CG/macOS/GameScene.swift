@@ -104,6 +104,10 @@ class GameScene: SKScene {
             fxCG_KeyDown(KEY_PRGM_5)
         case 22:
             fxCG_KeyDown(KEY_PRGM_6)
+        case 24:
+            fxCG_KeyDown(42)
+        case 27:
+            fxCG_KeyDown(32)
         case 26:
             fxCG_KeyDown(KEY_PRGM_7)
         case 28:
@@ -165,6 +169,10 @@ class GameScene: SKScene {
             fxCG_KeyUp(KEY_PRGM_6)
         case 26:
             fxCG_KeyUp(KEY_PRGM_7)
+        case 24:
+            fxCG_KeyUp(42)
+        case 27:
+            fxCG_KeyUp(32)
         case 28:
             fxCG_KeyUp(KEY_PRGM_8)
         case 25:

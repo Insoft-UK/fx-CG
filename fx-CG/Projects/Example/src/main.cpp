@@ -20,33 +20,47 @@
  THE SOFTWARE.
  */
 
-#include "fx-CG.h"
-#include <unistd.h>
+#include "fxCG.hpp"
+#include "C437.h"
 
-void OS_InnerWait_ms(int ms)
+using namespace fxCG;
+using namespace draw;
+using namespace key;
+using namespace font;
+
+// MARK: - CASIO fxCG Add-In Application "main" Function
+int fxCG_g3a(void)
 {
-    usleep(ms * 1000);
-}
-
-int MB_ElementCount(const char* buf)
-{
-    int length = 0;
-    uint8_t *p = (uint8_t *)buf;
-    do {
-        if (*p >= 0 && *p <= 0x7E) {
-            p++;
-            length++;
-        }
-        if (*p > 0x7E) {
-            p+=2;
-            length++;
-        }
-    } while (*p != 0);
-    return length;
-}
-
-
-void TakeScreenshot(void)
-{
+    /// Switches the screen to full color mode (16 bits per pixel, RGB565)
+    enableColor();
+    clearDisplay(white);
+    reset();
     
+    bool running = true;
+    while (running) {
+        update();
+        clearDisplay(white);
+
+        if (isHeld(Exit)) {
+            print(0, 24 * 1, "[EXIT] KeyHeld", black, C437);
+        }
+        
+        if (isPressed(Exit)) {
+            print(0, 24 * 2, "[EXIT] KeyPressed", black, C437);
+        }
+        
+        if (isReleased(Exit)) {
+            print(0, 24 * 3, "[EXIT] KeyReleased", black, C437);
+        }
+        
+
+        if (isPressed(Menu)) {
+            running = false;
+        }
+        
+        updateDisplay();
+        wait(100);
+    }
+    return 0;
 }
+

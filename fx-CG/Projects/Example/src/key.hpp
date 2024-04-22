@@ -20,45 +20,38 @@
  THE SOFTWARE.
  */
 
-#ifndef keyboard_h
-#define keyboard_h
+#ifndef key_hpp
+#define key_hpp
 
-#include <stdbool.h>
-#include <stdint.h>
-
-typedef enum {
-    KeyCode_F1    = 79, KeyCode_F2       = 69, KeyCode_F3     = 59, KeyCode_F4    = 49, KeyCode_F5     = 39, KeyCode_F6    = 29,
-    KeyCode_Shift = 78, KeyCode_Optn     = 68, KeyCode_Vars   = 58, KeyCode_Menu  = 48, KeyCode_Left   = 38, KeyCode_Up    = 28,
-    KeyCode_Alpha = 77, KeyCode_Sq       = 67, KeyCode_Power  = 57, KeyCode_Exit  = 47, KeyCode_Down   = 37, KeyCode_Right = 27,
-    KeyCode_XAngT = 76, KeyCode_Log      = 66, KeyCode_Ln     = 56, KeyCode_Sin   = 46, KeyCode_Cos    = 36, KeyCode_Tan   = 26,
-    KeyCode_Abc   = 75, KeyCode_SwapDisp = 65, KeyCode_CubeRt = 55, KeyCode_InvX  = 45, KeyCode_Comma  = 35, KeyCode_Ans   = 25,
-    KeyCode_7     = 74, KeyCode_8        = 64, KeyCode_9      = 54, KeyCode_Del   = 44, KeyCode_On     = 10,
-    KeyCode_4     = 73, KeyCode_5        = 63, KeyCode_6      = 53, KeyCode_Mult  = 43, KeyCode_Div    = 33,
-    KeyCode_1     = 72, KeyCode_2        = 62, KeyCode_3      = 52, KeyCode_Add   = 42, KeyCode_Minus  = 32,
-    KeyCode_0     = 71, KeyCode_Dot      = 61, KeyCode_Exp    = 51, KeyCode_Neg   = 41, KeyCode_Return = 31, KeyCode_NONE  = 0
-} KeyCode;
-
-/* Set up for C function definitions, even when using C++ */
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace fxCG::key {
+enum Code {
+    F1    = 79, F2       = 69, F3     = 59, F4    = 49, F5     = 39, F6    = 29,
+    Shift = 78, Optn     = 68, Vars   = 58, Menu  = 48, Left   = 38, Up    = 28,
+    Alpha = 77, Sq       = 67, Power  = 57, Exit  = 47, Down   = 37, Right = 27,
+    XAngT = 76, Log      = 66, Ln     = 56, Sin   = 46, Cos    = 36, Tan   = 26,
+    Abc   = 75, SwapDisp = 65, CubeRt = 55, InvX  = 45, Comma  = 35, Ans   = 25,
+    No7   = 74, No8      = 64, No9    = 54, Del   = 44, On     = 10,
+    No4   = 73, No5      = 63, No6    = 53, Mult  = 43, Div    = 33,
+    No1   = 72, No2      = 62, No3    = 52, Add   = 42, Minus  = 32,
+    K0    = 71, Dot      = 61, Exp    = 51, Neg   = 41, Return = 31, NONE  = 0
+};
 
 /**
  @brief    Reset key states.
  */
-void fxKeyReset(void);
+void reset(void);
 
 /**
  @brief    Takes a key reading of the keyboard register.
  */
-void fxKeyUpdate(void);
+void update(void);
 
 /**
  @brief    Returns key code of key that has been pressed down.
  
  keyUpdate required before using this function.
  */
-KeyCode fxKeyPressed(void);
+Code pressed(void);
 
 /**
  @brief    Returns true if key has is being held down.
@@ -66,7 +59,7 @@ KeyCode fxKeyPressed(void);
  
  keyUpdate not required.
  */
-bool fxIsKeyHeld(KeyCode keyCode);
+bool isHeld(Code keyCode);
 
 /**
  @brief    Returns true if key has just been pressed.
@@ -74,7 +67,7 @@ bool fxIsKeyHeld(KeyCode keyCode);
  
  keyUpdate required before using this function.
  */
-bool fxIsKeyPressed(KeyCode keyCode);
+bool isPressed(Code keyCode);
 
 /**
  @brief    Returns true if key has just been released
@@ -82,11 +75,7 @@ bool fxIsKeyPressed(KeyCode keyCode);
  
  keyUpdate required before using this function.
  */
-bool fxIsKeyReleased(KeyCode keyCode);
-
-/* Ends C function definitions when using C++ */
-#ifdef __cplusplus
+bool isReleased(Code keyCode);
 }
-#endif
 
-#endif /* keyboard_h */
+#endif /* key_hpp */

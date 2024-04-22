@@ -1,5 +1,5 @@
 /*
- Copyright © 2023 Insoft. All rights reserved.
+ Copyright © 2024 Insoft. All rights reserved.
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -20,46 +20,14 @@
  THE SOFTWARE.
  */
 
-#ifndef fx_CG_h
-#define fx_CG_h
-
-
-#ifdef __clang__
-#define FXCG_LCD_WIDTH 396
-#define FXCG_LCD_HEIGHT 224
-
-#define FXCG_SCREEN_WIDTH 386
-#define FXCG_SCREEN_HEIGHT 216
+#ifndef fxCG_hpp
+#define fxCG_hpp
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-
-
-#pragma pack(1)     /* set alignment to 1 byte boundary */
-typedef struct FXCG_Cursor {
-    int x;  /// x Must be in range of [0,21]
-    int y;  /// y Must be in range
-} FXCG_Cursor;
-
-typedef struct FXCG_DDRegister {
-    uint16_t B : 1;
-} FXCG_DDRegister;
-
-
-#pragma pack()   /* restore original alignment from stack */
-
-extern uint16_t _fxCG_0xFD801460;
-extern uint16_t _fxCG_0xA44B0000[5];
-extern FXCG_DDRegister _fxCG_DDRegister;
-extern uint16_t _fxCG_DRAM[ FXCG_LCD_WIDTH * FXCG_LCD_HEIGHT ];
-extern uint16_t _fxCG_VRAM[ FXCG_SCREEN_WIDTH * FXCG_SCREEN_HEIGHT ];
-extern bool _fxCG_StatusArea;
-extern FXCG_Cursor _fxCG_Cursor;
-
-#endif
 
 #ifndef __clang__
 #define fxCG_g3a main
@@ -84,33 +52,50 @@ extern FXCG_Cursor _fxCG_Cursor;
 #include "fxcg/heap.h"
 #include "fxcg/file.h"
 #include "fxcg/app.h"
-#endif
-
-/* Set up for C function definitions, even when using C++ */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifdef __clang__
-
-uint16_t *fxCGGetVRAM(void);
-
-int fxCG_Range(int min, int max, int value);
-void fxCG_DisplayRedraw(void *pixelData);
-
-void fxCG_KeyDown(int keyCode);
-void fxCG_KeyUp(int keyCode);
 
 /**
  The CASIO Add-In main function.
 */
-int fxCG_g3a(void);
+extern "C" int fxCG_g3a(void);
 #endif
 
-/* Ends C function definitions when using C++ */
-#ifdef __cplusplus
+#include "draw.hpp"
+#include "key.hpp"
+#include "font.hpp"
+
+namespace fxCG {
+
+enum Screen : uint16_t {
+    width = 384,
+    height = 216
+};
+
+enum Color : color_t {
+    white = 0xFFFF,
+    black = 0
+};
+
+void enableColor();
+void clearDisplay(color_t color);
+void updateDisplay();
+
+/**
+ @brief    Returns a color in RGB 565 format from a given RGB[0-255] value.
+ @param    r  Red channel
+ @param    g  Green channel
+ @param    b  Blue channel
+ */
+color_t color(uint8_t r, uint8_t g, uint8_t b);
+
+/**
+ @brief    Change the speed of the operating PLL circuit.
+ 
+ Notes: PLEASE before handling MENU keypresses in your add-in, use PLL_16x to go back to normal operating speed, at the courtesy of other applications and the OS. Feeding a value not defined below (AKA, an invalid value), will cause a crash.
+ */
+void changeFreq(int mult);
+
+
+void wait(int ms);
 }
-#endif
 
-
-#endif /* fx_CG_h */
+#endif /* fxCG_hpp */

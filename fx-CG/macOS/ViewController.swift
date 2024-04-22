@@ -31,12 +31,6 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let url = Bundle.main.url(forResource: "Charset", withExtension: "pbm") {
-            if let file = NSString(string: url.path).utf8String {
-                fxCG_LoadCharactorSet(UnsafePointer<CChar>(file))
-            }
-        }
-        
 
         let scene:SKScene = GameScene.init()
         scene.scaleMode = .aspectFill

@@ -7,28 +7,53 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1328C2E32BD6925E003C4B3A /* draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1328C2E12BD6925E003C4B3A /* draw.cpp */; };
+		1328C2E62BD6927C003C4B3A /* fxCG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1328C2E42BD6927C003C4B3A /* fxCG.cpp */; };
+		1328C2E92BD6B967003C4B3A /* key.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1328C2E72BD6B967003C4B3A /* key.cpp */; };
+		1328C2EC2BD6F718003C4B3A /* font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1328C2EA2BD6F718003C4B3A /* font.cpp */; };
 		13919EA529A46B96008277AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13919EA429A46B96008277AA /* AppDelegate.swift */; };
 		13919EAB29A46B96008277AA /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13919EAA29A46B96008277AA /* GameScene.swift */; };
 		13919EAD29A46B96008277AA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13919EAC29A46B96008277AA /* ViewController.swift */; };
 		13919EAF29A46B99008277AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13919EAE29A46B99008277AA /* Assets.xcassets */; };
 		13919EB229A46B99008277AA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 13919EB029A46B99008277AA /* Main.storyboard */; };
-		139CE2552BBB49E5006ED37C /* keyboard.c in Sources */ = {isa = PBXBuildFile; fileRef = 139CE2532BBB49E5006ED37C /* keyboard.c */; };
-		139CE2562BBB49E5006ED37C /* graphics.c in Sources */ = {isa = PBXBuildFile; fileRef = 139CE2542BBB49E5006ED37C /* graphics.c */; };
-		139CE2672BBB4CE3006ED37C /* default.c in Sources */ = {isa = PBXBuildFile; fileRef = 139CE2642BBB4CE2006ED37C /* default.c */; };
-		139CE2682BBB4CE3006ED37C /* font.c in Sources */ = {isa = PBXBuildFile; fileRef = 139CE2662BBB4CE2006ED37C /* font.c */; };
 		13AB06F729A9A2B000183128 /* fx-CGDisplayNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13AB06F629A9A2B000183128 /* fx-CGDisplayNode.swift */; };
 		13AB06FB29AA2E3100183128 /* keyboard.c in Sources */ = {isa = PBXBuildFile; fileRef = 13AB06FA29AA2E3100183128 /* keyboard.c */; };
 		13AB06FD29AA30EE00183128 /* display.c in Sources */ = {isa = PBXBuildFile; fileRef = 13AB06FC29AA30EE00183128 /* display.c */; };
-		13AB070229AA3C2A00183128 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 13F591892949671200A35F54 /* main.c */; };
+		13AB070229AA3C2A00183128 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13F591892949671200A35F54 /* main.cpp */; };
 		13AB070429AA3C5C00183128 /* system.c in Sources */ = {isa = PBXBuildFile; fileRef = 13AB070329AA3C5C00183128 /* system.c */; };
 		13AB070729AA7D0F00183128 /* fx-CG.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 13AB070629AA7D0F00183128 /* fx-CG.fsh */; };
 		13AB070929AA7E0600183128 /* ShaderKitExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13AB070829AA7E0600183128 /* ShaderKitExtensions.swift */; };
 		13AB070B29AD764800183128 /* file.c in Sources */ = {isa = PBXBuildFile; fileRef = 13AB070A29AD764800183128 /* file.c */; };
-		13AB072429AFD74D00183128 /* 18x24.pbm in Resources */ = {isa = PBXBuildFile; fileRef = 13AB072329AFD74D00183128 /* 18x24.pbm */; };
 		13D0D1D42BB4A1F3000564C1 /* fx-CG.c in Sources */ = {isa = PBXBuildFile; fileRef = 13D0D1D32BB4A1F3000564C1 /* fx-CG.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1328C28D2BC9E5FB003C4B3A /* GFXFont.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GFXFont.h; sourceTree = "<group>"; };
+		1328C2AE2BD0A06C003C4B3A /* fxCG50_10pt0xE5XX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_10pt0xE5XX.h; sourceTree = "<group>"; };
+		1328C2AF2BD0A06C003C4B3A /* fxCG50_18pt0x7FXX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_18pt0x7FXX.h; sourceTree = "<group>"; };
+		1328C2B02BD0A06C003C4B3A /* fxCG50_18pt0xE6XX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_18pt0xE6XX.h; sourceTree = "<group>"; };
+		1328C2B12BD0A06C003C4B3A /* fxCG50_24pt0xE6XX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_24pt0xE6XX.h; sourceTree = "<group>"; };
+		1328C2B22BD0A06C003C4B3A /* fxCG50_16pt0xXX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_16pt0xXX.h; sourceTree = "<group>"; };
+		1328C2B32BD0A06C003C4B3A /* fxCG50_16pt0xE5XX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_16pt0xE5XX.h; sourceTree = "<group>"; };
+		1328C2B42BD0A06C003C4B3A /* fxCG50_10pt0xXX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_10pt0xXX.h; sourceTree = "<group>"; };
+		1328C2B52BD0A06D003C4B3A /* fxCG50_16pt0xE6XX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_16pt0xE6XX.h; sourceTree = "<group>"; };
+		1328C2B62BD0A06D003C4B3A /* fxCG50_10pt0x7FXX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_10pt0x7FXX.h; sourceTree = "<group>"; };
+		1328C2B72BD0A06D003C4B3A /* fxCG50_10pt0xE6XX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_10pt0xE6XX.h; sourceTree = "<group>"; };
+		1328C2B82BD0A06D003C4B3A /* fxCG50_18pt0xXX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_18pt0xXX.h; sourceTree = "<group>"; };
+		1328C2B92BD0A06D003C4B3A /* fxCG50_24pt0x7FXX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_24pt0x7FXX.h; sourceTree = "<group>"; };
+		1328C2BA2BD0A06D003C4B3A /* fxCG50_18pt0xE5XX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_18pt0xE5XX.h; sourceTree = "<group>"; };
+		1328C2BB2BD0A06D003C4B3A /* fxCG50_24pt0xXX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_24pt0xXX.h; sourceTree = "<group>"; };
+		1328C2BC2BD0A06D003C4B3A /* fxCG50_24pt0xE5XX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_24pt0xE5XX.h; sourceTree = "<group>"; };
+		1328C2BD2BD0A07C003C4B3A /* GFXFont.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GFXFont.c; sourceTree = "<group>"; };
+		1328C2E12BD6925E003C4B3A /* draw.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = draw.cpp; sourceTree = "<group>"; };
+		1328C2E22BD6925E003C4B3A /* draw.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = draw.hpp; sourceTree = "<group>"; };
+		1328C2E42BD6927C003C4B3A /* fxCG.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = fxCG.cpp; sourceTree = "<group>"; };
+		1328C2E52BD6927C003C4B3A /* fxCG.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = fxCG.hpp; sourceTree = "<group>"; };
+		1328C2E72BD6B967003C4B3A /* key.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = key.cpp; sourceTree = "<group>"; };
+		1328C2E82BD6B967003C4B3A /* key.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = key.hpp; sourceTree = "<group>"; };
+		1328C2EA2BD6F718003C4B3A /* font.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = font.cpp; sourceTree = "<group>"; };
+		1328C2EB2BD6F718003C4B3A /* font.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = font.hpp; sourceTree = "<group>"; };
+		1328C2ED2BD6FC41003C4B3A /* C437.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = C437.h; sourceTree = "<group>"; };
 		13919DEB29A2D850008277AA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		13919DF229A2F26B008277AA /* fx-CG.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "fx-CG.h"; sourceTree = "<group>"; };
 		13919EA229A46B96008277AA /* fx-CG macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "fx-CG macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -39,15 +64,8 @@
 		13919EB129A46B99008277AA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		13919EB329A46B99008277AA /* fx-CG macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "fx-CG macOS.entitlements"; sourceTree = "<group>"; };
 		139CE24F2BBA11E8006ED37C /* version.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = version.txt; sourceTree = "<group>"; };
-		139CE2532BBB49E5006ED37C /* keyboard.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = keyboard.c; path = "../../fx-CG/keyboard.c"; sourceTree = "<group>"; };
-		139CE2542BBB49E5006ED37C /* graphics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = graphics.c; path = "../../fx-CG/graphics.c"; sourceTree = "<group>"; };
-		139CE2572BBB49F3006ED37C /* graphics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = graphics.h; path = "../../fx-CG/graphics.h"; sourceTree = "<group>"; };
-		139CE2582BBB49F3006ED37C /* keyboard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = keyboard.h; path = "../../fx-CG/keyboard.h"; sourceTree = "<group>"; };
 		139CE25B2BBB4A3F006ED37C /* Icon~sel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon~sel.png"; sourceTree = "<group>"; };
 		139CE25C2BBB4A3F006ED37C /* Icon~uns.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon~uns.png"; sourceTree = "<group>"; };
-		139CE2642BBB4CE2006ED37C /* default.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = default.c; sourceTree = "<group>"; };
-		139CE2652BBB4CE2006ED37C /* font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = font.h; sourceTree = "<group>"; };
-		139CE2662BBB4CE2006ED37C /* font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = font.c; sourceTree = "<group>"; };
 		139CE2692BBB7DBE006ED37C /* Example.g3a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Example.g3a; sourceTree = "<group>"; };
 		13AB06F229A9A23300183128 /* fx-CG macOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "fx-CG macOS-Bridging-Header.h"; sourceTree = "<group>"; };
 		13AB06F629A9A2B000183128 /* fx-CGDisplayNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fx-CGDisplayNode.swift"; sourceTree = "<group>"; };
@@ -57,9 +75,8 @@
 		13AB070629AA7D0F00183128 /* fx-CG.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = "fx-CG.fsh"; sourceTree = "<group>"; };
 		13AB070829AA7E0600183128 /* ShaderKitExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShaderKitExtensions.swift; sourceTree = "<group>"; };
 		13AB070A29AD764800183128 /* file.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = file.c; sourceTree = "<group>"; };
-		13AB072329AFD74D00183128 /* 18x24.pbm */ = {isa = PBXFileReference; lastKnownFileType = file; path = 18x24.pbm; sourceTree = "<group>"; };
 		13D0D1D32BB4A1F3000564C1 /* fx-CG.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "fx-CG.c"; sourceTree = "<group>"; };
-		13F591892949671200A35F54 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		13F591892949671200A35F54 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		13F5919A29496C6300A35F54 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -74,6 +91,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1328C2E02BD69241003C4B3A /* fxCG */ = {
+			isa = PBXGroup;
+			children = (
+				1328C2E12BD6925E003C4B3A /* draw.cpp */,
+				1328C2E22BD6925E003C4B3A /* draw.hpp */,
+				1328C2E42BD6927C003C4B3A /* fxCG.cpp */,
+				1328C2E52BD6927C003C4B3A /* fxCG.hpp */,
+				1328C2E72BD6B967003C4B3A /* key.cpp */,
+				1328C2E82BD6B967003C4B3A /* key.hpp */,
+				1328C2EA2BD6F718003C4B3A /* font.cpp */,
+				1328C2EB2BD6F718003C4B3A /* font.hpp */,
+			);
+			name = fxCG;
+			sourceTree = "<group>";
+		};
 		13919DD929A2D0AE008277AA /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -99,25 +131,6 @@
 			path = Icon;
 			sourceTree = "<group>";
 		};
-		139CE2622BBB4B64006ED37C /* fx-CG */ = {
-			isa = PBXGroup;
-			children = (
-				139CE2632BBB4B79006ED37C /* include */,
-				139CE2542BBB49E5006ED37C /* graphics.c */,
-				139CE2532BBB49E5006ED37C /* keyboard.c */,
-			);
-			name = "fx-CG";
-			sourceTree = "<group>";
-		};
-		139CE2632BBB4B79006ED37C /* include */ = {
-			isa = PBXGroup;
-			children = (
-				139CE2572BBB49F3006ED37C /* graphics.h */,
-				139CE2582BBB49F3006ED37C /* keyboard.h */,
-			);
-			name = include;
-			sourceTree = "<group>";
-		};
 		13D0D1CA2BB37351000564C1 /* macOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -141,7 +154,6 @@
 		13D0D1CB2BB37447000564C1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				13AB072329AFD74D00183128 /* 18x24.pbm */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -151,6 +163,7 @@
 			children = (
 				13D0D1D02BB37B8B000564C1 /* include */,
 				13D0D1D32BB4A1F3000564C1 /* fx-CG.c */,
+				1328C2BD2BD0A07C003C4B3A /* GFXFont.c */,
 				13AB06FA29AA2E3100183128 /* keyboard.c */,
 				13AB06FC29AA30EE00183128 /* display.c */,
 				13AB070329AA3C5C00183128 /* system.c */,
@@ -163,6 +176,22 @@
 			isa = PBXGroup;
 			children = (
 				13919DF229A2F26B008277AA /* fx-CG.h */,
+				1328C28D2BC9E5FB003C4B3A /* GFXFont.h */,
+				1328C2B62BD0A06D003C4B3A /* fxCG50_10pt0x7FXX.h */,
+				1328C2AE2BD0A06C003C4B3A /* fxCG50_10pt0xE5XX.h */,
+				1328C2B72BD0A06D003C4B3A /* fxCG50_10pt0xE6XX.h */,
+				1328C2B42BD0A06C003C4B3A /* fxCG50_10pt0xXX.h */,
+				1328C2B32BD0A06C003C4B3A /* fxCG50_16pt0xE5XX.h */,
+				1328C2B52BD0A06D003C4B3A /* fxCG50_16pt0xE6XX.h */,
+				1328C2B22BD0A06C003C4B3A /* fxCG50_16pt0xXX.h */,
+				1328C2AF2BD0A06C003C4B3A /* fxCG50_18pt0x7FXX.h */,
+				1328C2BA2BD0A06D003C4B3A /* fxCG50_18pt0xE5XX.h */,
+				1328C2B02BD0A06C003C4B3A /* fxCG50_18pt0xE6XX.h */,
+				1328C2B82BD0A06D003C4B3A /* fxCG50_18pt0xXX.h */,
+				1328C2B92BD0A06D003C4B3A /* fxCG50_24pt0x7FXX.h */,
+				1328C2BC2BD0A06D003C4B3A /* fxCG50_24pt0xE5XX.h */,
+				1328C2B12BD0A06C003C4B3A /* fxCG50_24pt0xE6XX.h */,
+				1328C2BB2BD0A06D003C4B3A /* fxCG50_24pt0xXX.h */,
 			);
 			name = include;
 			sourceTree = "<group>";
@@ -184,11 +213,9 @@
 		13F591982949693B00A35F54 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				139CE2622BBB4B64006ED37C /* fx-CG */,
-				13F591892949671200A35F54 /* main.c */,
-				139CE2642BBB4CE2006ED37C /* default.c */,
-				139CE2662BBB4CE2006ED37C /* font.c */,
-				139CE2652BBB4CE2006ED37C /* font.h */,
+				1328C2ED2BD6FC41003C4B3A /* C437.h */,
+				1328C2E02BD69241003C4B3A /* fxCG */,
+				13F591892949671200A35F54 /* main.cpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -274,7 +301,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				13AB070729AA7D0F00183128 /* fx-CG.fsh in Resources */,
-				13AB072429AFD74D00183128 /* 18x24.pbm in Resources */,
 				13919EAF29A46B99008277AA /* Assets.xcassets in Resources */,
 				13919EB229A46B99008277AA /* Main.storyboard in Resources */,
 			);
@@ -288,18 +314,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				13AB070B29AD764800183128 /* file.c in Sources */,
+				1328C2E92BD6B967003C4B3A /* key.cpp in Sources */,
 				13AB06FD29AA30EE00183128 /* display.c in Sources */,
 				13919EAD29A46B96008277AA /* ViewController.swift in Sources */,
+				1328C2E32BD6925E003C4B3A /* draw.cpp in Sources */,
 				13AB070929AA7E0600183128 /* ShaderKitExtensions.swift in Sources */,
 				13AB06FB29AA2E3100183128 /* keyboard.c in Sources */,
-				139CE2562BBB49E5006ED37C /* graphics.c in Sources */,
 				13919EAB29A46B96008277AA /* GameScene.swift in Sources */,
-				13AB070229AA3C2A00183128 /* main.c in Sources */,
+				1328C2EC2BD6F718003C4B3A /* font.cpp in Sources */,
+				1328C2E62BD6927C003C4B3A /* fxCG.cpp in Sources */,
+				13AB070229AA3C2A00183128 /* main.cpp in Sources */,
 				13AB06F729A9A2B000183128 /* fx-CGDisplayNode.swift in Sources */,
-				139CE2552BBB49E5006ED37C /* keyboard.c in Sources */,
-				139CE2682BBB4CE3006ED37C /* font.c in Sources */,
 				13AB070429AA3C5C00183128 /* system.c in Sources */,
-				139CE2672BBB4CE3006ED37C /* default.c in Sources */,
 				13919EA529A46B96008277AA /* AppDelegate.swift in Sources */,
 				13D0D1D42BB4A1F3000564C1 /* fx-CG.c in Sources */,
 			);

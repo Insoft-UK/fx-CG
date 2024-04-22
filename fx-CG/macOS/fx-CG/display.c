@@ -21,16 +21,206 @@
  */
 
 #include "fx-CG.h"
+#include "GFXFont.h"
+#include "fxCG50_10pt0xXX.h"
+#include "fxCG50_10pt0x7FXX.h"
+#include "fxCG50_10pt0xE5XX.h"
+#include "fxCG50_10pt0xE6XX.h"
+#include "fxCG50_16pt0xXX.h"
+#include "fxCG50_16pt0xE5XX.h"
+#include "fxCG50_16pt0xE6XX.h"
+#include "fxCG50_18pt0xXX.h"
+#include "fxCG50_18pt0x7FXX.h"
+#include "fxCG50_18pt0xE5XX.h"
+#include "fxCG50_18pt0xE6XX.h"
+#include "fxCG50_24pt0xXX.h"
+#include "fxCG50_24pt0x7FXX.h"
+#include "fxCG50_24pt0xE5XX.h"
+#include "fxCG50_24pt0xE6XX.h"
 
 
-void Bdisp_AreaClr( struct TBdispFill * area, unsigned char target, unsigned short color )
+static GFXfont get24pt(uint8_t extendedCode)
+{
+    switch (extendedCode) {
+        case 0x7F:
+            return fxCG50_24pt0x7FXX;
+            break;
+            
+        case 0xE5:
+            return fxCG50_24pt0xE5XX;
+            break;
+            
+        case 0xE6:
+            return fxCG50_24pt0xE6XX;
+            break;
+            
+        default:
+            return fxCG50_24pt0xXX;
+            break;
+    }
+}
+
+static GFXfont get18pt(uint8_t extendedCode)
+{
+    switch (extendedCode) {
+        case 0x7F:
+            return fxCG50_18pt0x7FXX;
+            break;
+            
+        case 0xE5:
+            return fxCG50_18pt0xE5XX;
+            break;
+            
+        case 0xE6:
+            return fxCG50_18pt0xE6XX;
+            break;
+            
+        default:
+            return fxCG50_18pt0xXX;
+            break;
+    }
+}
+
+static GFXfont get16pt(uint8_t extendedCode)
+{
+    switch (extendedCode) {
+        case 0xE5:
+            return fxCG50_16pt0xE5XX;
+            break;
+            
+        case 0xE6:
+            return fxCG50_16pt0xE6XX;
+            break;
+            
+        default:
+            return fxCG50_16pt0xXX;
+            break;
+    }
+}
+
+static GFXfont get10pt(uint8_t extendedCode)
+{
+    switch (extendedCode) {
+        case 0x7F:
+            return fxCG50_10pt0x7FXX;
+            break;
+            
+        case 0xE5:
+            return fxCG50_10pt0xE5XX;
+            break;
+            
+        case 0xE6:
+            return fxCG50_10pt0xE6XX;
+            break;
+            
+        default:
+            return fxCG50_10pt0xXX;
+            break;
+    }
+}
+
+static GFXfont getFont(FontSize size, uint8_t extendedCode)
+{
+    switch (size) {
+        case FontSize_24pt:
+            return get24pt(extendedCode);
+            break;
+            
+        case FontSize_18pt:
+            return get18pt(extendedCode);
+            break;
+            
+        case FontSize_16pt:
+            return get16pt(extendedCode);
+            break;
+            
+        case FontSize_10pt:
+            return get10pt(extendedCode);
+            break;
+    }
+}
+
+int fxCGDrawGlyph(int x, int y, uint8_t *c, uint16_t color, FontSize size)
+{
+    GFXfont font;
+    
+    if (*c == 0x7F || *c == 0xE5 || *c == 0xE6) {
+        font = getFont(size, *c++);
+    } else {
+        font = getFont(size, 0);
+    }
+    
+    
+    if (*c < font.first || *c > font.last) {
+        return (int)size;
+    }
+    
+    GFXglyph *glyph = &font.glyph[(int)*c - font.first];
+    
+    int height = glyph->height;
+    int width = glyph->width;
+   
+    x += glyph->dX;
+    y += glyph->dY + font.yAdvance;
+    
+    uint8_t *bitmap = font.bitmap + glyph->offset;
+    uint8_t bitPosition = 1 << 7;
+    uint16_t *VRAM = fxCGGetVRAM();
+    while (height--) {
+        for (int xx=0; xx<width; xx++) {
+            if (!bitPosition) {
+                bitPosition = 1 << 7;
+                bitmap++;
+            }
+            if (*bitmap & bitPosition) {
+                VRAM[x + xx + y * LCD_WIDTH_PX] = color;
+            }
+            bitPosition >>= 1;
+        }
+        y++;
+    }
+    return glyph->xAdvance;
+}
+
+int fxCGDrawText(int x, int y, const char *s, uint16_t color, FontSize size)
+{
+    uint8_t *c = (uint8_t *)s;
+    
+    while (*c) {
+        x += fxCGDrawGlyph(x, y, c, color, size);
+        if (*c == 0x7F || *c == 0xE5 || *c == 0xE6)
+            c++;
+        c++;
+    }
+    return x;
+}
+
+static int getTextSize(unsigned char *c, FontSize size)
+{
+    GFXfont font = getFont(size, 0);
+    int width = 0;
+    while (*c) {
+        if (*c == 0x7F || *c == 0xE5 || *c == 0xE6)
+            c++;
+        if (*c < font.first || *c > font.last)
+            continue;
+        GFXglyph *glyph = &font.glyph[(int)*c - font.first];
+        width += glyph->xAdvance;
+        c++;
+    }
+    return width;
+}
+
+
+
+void Bdisp_AreaClr(struct TBdispFillArea * area, uint8_t target, color_t color)
 {
     color_t* VRAM = (color_t *)GetVRAMAddress();
     
-    for (int y = area->y1; y < area->y2 && y < LCD_HEIGHT_PX; y++)
+    for (int y = area->y1; y <= area->y2 && y < LCD_HEIGHT_PX - 1; y++)
     {
         if (y < 0) continue;
-        for (int x = area->x1; x < area->x2 && x < LCD_WIDTH_PX; x++)
+        for (int x = area->x1; x <= area->x2 && x < LCD_WIDTH_PX - 1; x++)
         {
             if (x < 0) continue;
             VRAM[x + y * LCD_WIDTH_PX] = (unsigned short)color;
@@ -38,9 +228,9 @@ void Bdisp_AreaClr( struct TBdispFill * area, unsigned char target, unsigned sho
     }
 }
 
-int Bdisp_EnableColor( ColorMode n )
+int Bdisp_EnableColor(int mode)
 {
-    _fxCG_DDRegister.B = n == kColorMode_EnableFullColor ? 0 : 1;
+    _fxCG_DDRegister.B = mode == FXCGColorModeEnableFullColor ? 0 : 1;
     return 0;
 }
 
@@ -48,7 +238,8 @@ int Bdisp_EnableColor( ColorMode n )
  [mode] Area of the VRAM to fill. When mode is 1, the area below the status area is filled; when mode is 2, the area between
  the status area and the F-key labels is filled;  and when mode is 3 or 4, the whole VRAM is filled.
  **/
-void Bdisp_Fill_VRAM( int color, int mode ) {
+void Bdisp_Fill_VRAM( int color, int mode )
+{
     if (mode == 0 || mode > 4) return;
     
     for (int y = mode == kAreaMode_BelowStatus || mode == kAreaMode_BetweenStatusAndFKeyLabels ? 24 : 0; y < (mode == kAreaMode_BetweenStatusAndFKeyLabels ? LCD_HEIGHT_PX - 24 : LCD_HEIGHT_PX); y++) {
@@ -65,6 +256,12 @@ void *GetVRAMAddress( void )
 
 void Bdisp_PutDisp_DD( void ) {
     uint16_t color;
+    
+    uint16_t *VRAM = GetVRAMAddress();
+    for (int x=0; x<LCD_WIDTH_PX; x++) {
+        VRAM[x + 22 * LCD_WIDTH_PX] = 0;
+    }
+
     for (int y = 0; y < LCD_HEIGHT_PX; y++) {
         for (int x = 0; x < LCD_WIDTH_PX; x++) {
             color = Bdisp_GetPoint_VRAM(x, y);
@@ -75,7 +272,7 @@ void Bdisp_PutDisp_DD( void ) {
 
 void Bdisp_SetDDRegisterB(int colorMode)
 {
-    _fxCG_DDRegister.B = colorMode == kColorMode_EnableFullColor ? 0 : 1;
+    _fxCG_DDRegister.B = colorMode == FXCGColorModeEnableFullColor ? 0 : 1;
 }
 
 void Bdisp_SetPoint_DD( int x, int y, int color ) {
@@ -85,36 +282,37 @@ void Bdisp_SetPoint_DD( int x, int y, int color ) {
 
 void Bdisp_SetPoint_VRAM( int x, int y, int color ) {
     if (x < 0 || x >= LCD_WIDTH_PX || y < 0 || y >= LCD_HEIGHT_PX) return;
-    color_t* VRAM = (color_t *)GetVRAMAddress();
+    
+    uint16_t *VRAM = (uint16_t *)GetVRAMAddress();
     
     if (_fxCG_DDRegister.B != 0) {
         switch (color) {
             case 1:
-                color = kTextColor_Blue;
+                color = FXCGColorBlue;
                 break;
                 
             case 2:
-                color = kTextColor_Green;
+                color = FXCGColorGreen;
                 break;
                 
             case 3:
-                color = kTextColor_Cyan;
+                color = FXCGColorCyan;
                 break;
                 
             case 4:
-                color = kTextColor_Red;
+                color = FXCGColorRed;
                 break;
                 
             case 5:
-                color = kTextColor_Magenta;
+                color = FXCGColorMagenta;
                 break;
                 
             case 6:
-                color = kTextColor_Yellow;
+                color = FXCGColorYellow;
                 break;
                 
             case 7:
-                color = kTextColor_White;
+                color = FXCGColorWhite;
                 break;
         }
     }
@@ -124,8 +322,8 @@ void Bdisp_SetPoint_VRAM( int x, int y, int color ) {
 
 color_t Bdisp_GetPoint_VRAM( int x, int y )
 {
-    if (x < 0 || x > LCD_WIDTH_PX - 1) return kColor_White;
-    if (y < 0 || y > LCD_HEIGHT_PX - 1) return kColor_White;
+    if (x < 0 || x > LCD_WIDTH_PX - 1) return FXCGColorWhite;
+    if (y < 0 || y > LCD_HEIGHT_PX - 1) return FXCGColorWhite;
     
     color_t* VRAM = (color_t *)GetVRAMAddress();
         return VRAM[x + y * LCD_WIDTH_PX];
@@ -148,24 +346,31 @@ void locate_OS( int x, int y )
 
 void Print_OS(const char* msg, int invers, int zero2)
 {
-    PrintCXY(_fxCG_Cursor.x * 18, _fxCG_Cursor.y * 24, msg, invers ? kTextModeFlags_Invert : kTextModeFlags_Normal, -1, kColor_Black, kColor_White, 1, 0);
+    PrintCXY(_fxCG_Cursor.x * 18, _fxCG_Cursor.y * 24, msg, invers ? FXCGTextModeInvert : FXCGTextModeNormal, -1, FXCGColorBlack, FXCGColorWhite, 1, 0);
     _fxCG_Cursor.x = fxCG_Range(0, 20, _fxCG_Cursor.x + 1);
 }
 
-
-void PrintCXY( int x, int y, const char *cptr, int mode_flags, int P5, int color, int back_color, int P8, int P9 )
+void Bdisp_MMPrintRef(int*x, int*y, unsigned char *s, int mode, int xmax, int P6, int P5, int color, int P9, int P10, int P11)
 {
-    unsigned char * c = (unsigned char *)cptr;
-    while (*c) {
-        if (mode_flags == kTextModeFlags_Normal)
-            PrintGlyph(x, y + 24, c, 0, color, back_color, 0);
-        
-        if (mode_flags == kTextModeFlags_Invert)
-            PrintGlyph(x, y + 24, c, 0, back_color, color, 0);
-        
-        c++;
-        x += 18;
+//    fxCGDrawText(*x, *y + 24, (const char*)s, color, FontSize_16pt);
+}
+void Bdisp_MMPrint(int x, int y, char* s, int mode, int xmax, int P6, int P7, int color, int backcolor, int P10, int P11)
+{
+//    fxCGDrawText(x, y + 24, (const char*)s, color, FontSize_16pt);
+}
+
+void PrintCXY( int x, int y, const char *text, int mode, int P5, int color, int bgcolor, int P8, int P9 )
+{
+    if (mode & FXCGTextModeInvert) {
+        uint16_t tmp = color;
+        color = bgcolor;
+        bgcolor = tmp;
     }
+    TBdispFillArea area = {
+        .x1 = x, .y1 = y, .x2 = x + getTextSize((unsigned char *)text, FontSize_24pt) - 1, .y2 = y + 23
+    };
+    Bdisp_AreaClr(&area, FXCGFillAreaTargetVRAM, bgcolor);
+    fxCGDrawText(x, y, text, color, FontSize_24pt);
 }
 
 
@@ -188,9 +393,9 @@ void DrawFrame( color_t color )
     }
 }
 
-color_t FrameColor(FrameMode mode, color_t color)
+color_t FrameColor(FXCGFrameMode mode, color_t color)
 {
-    if (mode == kFrameMode_SetToColor) {
+    if (mode == FXCGFrameModeSetToColor) {
         _fxCG_0xFD801460 = color;
     }
     else {
@@ -224,40 +429,68 @@ void EnableDisplayHeader(int action, int value)
     
 }
 
-void PrintGlyph(int x, int y, unsigned char * glyph, int mode_flags, color_t color, color_t back_color, int P7)
+void PrintGlyph(int x, int y, uint8_t *glyph, int mode, color_t color, color_t bgcolor, int P7)
 {
-    /// 24px and 18px
-    unsigned char ascii = *glyph;
-    if (ascii < '!' || ascii > '~') return;
     
-    for (int row = 0; row < 24; row++)
-    {
-        int mask = 1 << 17;
-        for (int n = 0; n < 18; n++)
-        {
-            Bdisp_SetPoint_VRAM(x + n, y + row, _fxCG_Glyphs[ascii - '!'].data[row] & mask ? color : back_color);
-            mask >>= 1;
-        }
+    if (!(mode & FXCGTextModeTransparentBackground)) {
+        TBdispFillArea area;
+    
+        area.mode = FXCGFillAreaModeColor;
+        area.x1 = x;
+        area.y1 = y;
+        area.x2 = x + 17;
+        area.y2 = y + 23;
+        Bdisp_AreaClr(&area, FXCGFillAreaTargetVRAM, color);
     }
+
+    if (mode & FXCGTextModeInvert) {
+        uint16_t tmp = color;
+        color = bgcolor;
+        bgcolor = tmp;
+    }
+    
+    fxCGDrawGlyph(x, y, glyph, color, FontSize_24pt);
+    
 }
 
 void*GetMiniGlyphPtr( unsigned short mb_glyph_no, unsigned short*glyph_info )
 {
     return 0;
 }
-void PrintMiniGlyph(int x, int y, void*glyph, TextModeFlags mode_flags, int glyph_width, int P6, int P7, int P8, int P9, int color, int back_color, int P12)
+void PrintMiniGlyph(int x, int y, void *glyph, uint32_t mode, int glyph_width, int P6, int P7, int P8, int P9, int color, int bgcolor, int P12)
 {
+    fxCGDrawGlyph(x, y, glyph, color, FontSize_18pt);
+}
+void PrintMini( int *x, int *y, const char *text, unsigned int mode, unsigned int xlimit, int P6, int P7, int color, int bgcolor, int writeflag, int P11 ) {
+
+    int xx = *x, yy = *y;
+    yy += (mode & 0x40 ? 0 : 24);
     
+    if (mode & FXCGTextModeInvert) {
+        uint16_t tmp = color;
+        color = bgcolor;
+        bgcolor = tmp;
+    }
+    if (!(mode & 0x2)) {
+        TBdispFillArea area = {
+            .x1 = *x, .y1 = *y, .x2 = *x + getTextSize((unsigned char *)text, FontSize_24pt) - 1, .y2 = *y + 17
+        };
+        Bdisp_AreaClr(&area, FXCGFillAreaTargetVRAM, bgcolor);
+    }
+    
+    if (mode & 0x1) {
+        *x = fxCGDrawText(xx, yy, text, bgcolor, FontSize_18pt);
+        return;
+    }
+    *x = fxCGDrawText(xx, yy, text, color, FontSize_18pt);
 }
-void PrintMini( int *x, int *y, const char *MB_string, TextModeFlags mode_flags, unsigned int xlimit, int P6, int P7, int color, int back_color, int writeflag, int P11 ) {
-//    if (mode_flags == kTextModeFlags_Normal)
-//        
-//    if (mode_flags == kTextModeFlags_Invert)
-//       
-//    
-}
-void PrintMiniMini( int *x, int *y, const char *MB_string, int mode1, int color, int mode2 )
+void PrintMiniMini( int *x, int *y, const char *text, int mode1, int color, int mode2 )
 {
+    if (mode1 & 0x1) {
+        fxCGDrawText(*x, *y + 24, text, color, FontSize_10pt);\
+        return;
+    }
+    fxCGDrawText(*x, *y + 24, text, color, FontSize_10pt);
     
 }
 
@@ -296,6 +529,8 @@ void LoadVRAM_1(void) {
         *dest++ = *src++;
     } while (--length);
 }
+
+
 
 //MARK: - NOT! syscalls (defined within libfxcg):
 
