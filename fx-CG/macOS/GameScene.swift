@@ -37,6 +37,7 @@ class GameScene: SKScene {
         
         DispatchQueue.global(qos: .userInteractive).async {
             fxCG_g3a()
+            _callback()
             exit(0)
         }
     }

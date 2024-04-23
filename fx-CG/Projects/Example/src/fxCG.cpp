@@ -27,6 +27,11 @@ void fxCG::enableColor()
     Bdisp_EnableColor(1);
 }
 
+void fxCG::disableColor()
+{
+    Bdisp_EnableColor(0);
+}
+
 void fxCG::clearDisplay(color_t color)
 {
     uint16_t *VRAM = (uint16_t*)GetVRAMAddress();

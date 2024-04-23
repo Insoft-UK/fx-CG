@@ -23,6 +23,12 @@
 #include "fx-CG.h"
 #include <unistd.h>
 
+static void Callback(void)
+{
+    return;
+}
+void (*_callback)(void) = Callback;
+
 void OS_InnerWait_ms(int ms)
 {
     usleep(ms * 1000);
@@ -49,4 +55,9 @@ int MB_ElementCount(const char* buf)
 void TakeScreenshot(void)
 {
     
+}
+
+void SetQuitHandler(void (*callback)(void))
+{
+    _callback = callback;
 }

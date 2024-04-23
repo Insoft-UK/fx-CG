@@ -1082,7 +1082,7 @@ int fxCG_g3a(void) {
             running = false;
         }
     }
-    
+    running = true;
     // Sets the screen border color back to white.
     FrameColor(FXCGFrameModeSetToColor, white);
     DrawFrame(white);

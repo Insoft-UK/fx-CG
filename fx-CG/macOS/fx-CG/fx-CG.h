@@ -59,6 +59,8 @@ extern uint16_t _fxCG_VRAM[ FXCG_SCREEN_WIDTH * FXCG_SCREEN_HEIGHT ];
 extern bool _fxCG_StatusArea;
 extern FXCG_Cursor _fxCG_Cursor;
 
+extern void (*_callback)(void);
+
 #endif
 
 #ifndef __clang__

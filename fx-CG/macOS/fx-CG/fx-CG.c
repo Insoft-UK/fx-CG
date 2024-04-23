@@ -22,6 +22,7 @@
 
 #include "fx-CG.h"
 
+
 FXCG_DDRegister _fxCG_DDRegister = {
     .B = 1 /// 1 = Enable 8 color mode
 };

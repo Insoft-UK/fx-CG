@@ -41,6 +41,25 @@
 #include <fxcg/heap.h>
 #include <fxcg/file.h>
 #include <fxcg/app.h>
+
+void* operator new(unsigned int size){
+    return malloc(size);
+}
+void operator delete(void* addr) {
+    free(addr);
+}
+void* operator new[](unsigned int size) {
+    return malloc(size);
+}
+void operator delete[](void* addr) {
+    free(addr);
+}
+void operator delete(void* addr, unsigned int size) {
+    free(addr);
+}
+void operator delete[](void* addr, unsigned int size) {
+    free(addr);
+}
 #else
 #include "fxcg/display.h"
 #include "fxcg/keyboard.h"
@@ -82,6 +101,7 @@ enum Color : color_t {
 };
 
 void enableColor();
+void disableColor();
 void clearDisplay(color_t color);
 void updateDisplay();
 

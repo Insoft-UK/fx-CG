@@ -28,38 +28,44 @@ using namespace draw;
 using namespace key;
 using namespace font;
 
+void quitHandler(void)
+{
+    reset();
+}
+
 // MARK: - CASIO fxCG Add-In Application "main" Function
 int fxCG_g3a(void)
 {
+    SetQuitHandler(quitHandler);
+    
     /// Switches the screen to full color mode (16 bits per pixel, RGB565)
     enableColor();
     clearDisplay(white);
-    reset();
     
-    bool running = true;
-    while (running) {
+    
+    while (1) {
         update();
         clearDisplay(white);
 
         if (isHeld(Exit)) {
-            print(0, 24 * 1, "[EXIT] KeyHeld", black, C437);
+            print(0, 16 * 1, "[EXIT] KeyHeld", black, C437);
         }
         
         if (isPressed(Exit)) {
-            print(0, 24 * 2, "[EXIT] KeyPressed", black, C437);
+            print(0, 16 * 2, "[EXIT] KeyPressed", black, C437);
         }
         
         if (isReleased(Exit)) {
-            print(0, 24 * 3, "[EXIT] KeyReleased", black, C437);
+            print(0, 16 * 3, "[EXIT] KeyReleased", black, C437);
         }
         
 
-        if (isPressed(Menu)) {
-            running = false;
-        }
+        if (isPressed(Menu))
+            break;
+        
         
         updateDisplay();
-        wait(100);
+        wait(40);
     }
     return 0;
 }
