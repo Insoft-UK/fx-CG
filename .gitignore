@@ -3,7 +3,8 @@ xcuserdata/
 .DS_Store
 *.gz
 bin/*
-PrizmSDK/Installer/gcc
-fx-CG/Projects/fx-CG/
-fx-CG/Projects/Ratio/
-fx-CG/Projects/Charset/
+#SDK/Installer/gcc
+Prizm/Projects/fx-CG/
+Prizm/Projects/Ratio/
+Prizm/Projects/Charset/
+Prizm/Projects/GravityDuck/
