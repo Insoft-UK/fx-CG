@@ -23,7 +23,7 @@
 #ifndef font_hpp
 #define font_hpp
 
-#include <stdint.h>
+#include "types.h"
 
 typedef struct {
     uint16_t offset;   // Offset address to the bitmap data for this glypth.

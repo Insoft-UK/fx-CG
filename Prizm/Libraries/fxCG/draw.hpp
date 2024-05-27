@@ -23,9 +23,7 @@
 #ifndef draw_hpp
 #define draw_hpp
 
-#include <stdint.h>
-
-typedef unsigned short color_t;
+#include "types.h"
 
 namespace fxCG::draw {
 
@@ -129,7 +127,7 @@ void fillArea(unsigned x, unsigned y, unsigned w, unsigned h, color_t color);
  @param    y   Specifies the y coordinate of the pixel in range of [0,215]
  @param    color Specifies what color the plotted pixel will be. It is in RGB 565 format.
  */
-void plot(int x, int y, uint16_t color);
+void pixel(int x, int y, uint16_t color);
 
 /**
  @brief    Draw a 16-bit sprite/image to the VRAM buffer.

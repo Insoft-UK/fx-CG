@@ -33,8 +33,9 @@ enum Code {
     No7   = 74, No8      = 64, No9    = 54, Del   = 44, On     = 10,
     No4   = 73, No5      = 63, No6    = 53, Mult  = 43, Div    = 33,
     No1   = 72, No2      = 62, No3    = 52, Add   = 42, Minus  = 32,
-    K0    = 71, Dot      = 61, Exp    = 51, Neg   = 41, Return = 31, NONE  = 0
+    No0   = 71, Dot      = 61, Exp    = 51, Neg   = 41, Return = 31, NONE  = 0
 };
+
 
 /**
  @brief    Reset key states.

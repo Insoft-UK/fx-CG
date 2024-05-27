@@ -30,38 +30,41 @@
 #include <string.h>
 
 #ifndef __clang__
-#define fxCG_g3a main
+#define g3a main
 #include <fxcg/display.h>
-#include <fxcg/keyboard.h>
 #include <fxcg/system.h>
-#include <fxcg/serial.h>
-#include <fxcg/rtc.h>
-#include <fxcg/misc.h>
-#include <fxcg/registers.h>
 #include <fxcg/heap.h>
 #include <fxcg/file.h>
-#include <fxcg/app.h>
 #else
 #include "fxcg/display.h"
-#include "fxcg/keyboard.h"
 #include "fxcg/system.h"
-#include "fxcg/serial.h"
-#include "fxcg/rtc.h"
-#include "fxcg/misc.h"
-#include "fxcg/registers.h"
 #include "fxcg/heap.h"
 #include "fxcg/file.h"
-#include "fxcg/app.h"
-
 /**
  The CASIO Add-In main function.
 */
-extern "C" int fxCG_g3a(void);
+extern "C" int g3a(void);
 #endif
 
-#include "draw.hpp"
-#include "key.hpp"
-#include "font.hpp"
+#define Bfile_OpenFile(filename, mode) Bfile_OpenFile_OS(filename, mode, 0)
+#define Bfile_CloseFile Bfile_CloseFile_OS
+#define Bfile_GetFileSize Bfile_GetFileSize_OS
+#define Bfile_GetMediaFree Bfile_GetMediaFree_OS
+#define Bfile_CreateEntry Bfile_CreateEntry_OS
+#define Bfile_ReadFile Bfile_ReadFile_OS
+#define Bfile_WriteFile Bfile_WriteFile_OS
+#define Bfile_TellFile Bfile_TellFile_OS
+#define Bfile_SeekFile Bfile_SeekFile_OS
+
+#define updateDisplay Bdisp_PutDisp_DD
+#define wait OS_InnerWait_ms
+
+#ifdef __clang__
+#define sys_calloc calloc
+#define sys_malloc malloc
+#define sys_realloc realloc
+#define sys_free free
+#endif
 
 namespace fxCG {
 
@@ -83,7 +86,6 @@ enum Color : color_t {
 
 void enableColor();
 void clearDisplay(color_t color);
-void updateDisplay();
 
 /**
  @brief    Returns a color in RGB 565 format from a given RGB[0-255] value.
@@ -99,9 +101,6 @@ color_t color(uint8_t r, uint8_t g, uint8_t b);
  Notes: PLEASE before handling MENU keypresses in your add-in, use PLL_16x to go back to normal operating speed, at the courtesy of other applications and the OS. Feeding a value not defined below (AKA, an invalid value), will cause a crash.
  */
 void changeFreq(int mult);
-
-
-void wait(int ms);
 }
 
 #endif /* fxCG_hpp */

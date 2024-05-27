@@ -2,8 +2,9 @@
 BASEDIR=$(dirname "$0")
 cd "$BASEDIR"
 
-cp -rf fx-CG ~/
-cp -rf SDK /Applications/CASIO/
+cp -rf Prizm ~/
+mkdir /Applications/CASIO/SDK
+cp -rf SDK/Installer /Applications/CASIO/SDK
 cd /Applications/CASIO/SDK/Installer
 ./install.sh
 cd ..

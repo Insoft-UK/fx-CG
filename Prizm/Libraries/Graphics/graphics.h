@@ -1,5 +1,5 @@
 /*
- Copyright © 2024 Insoft. All rights reserved.
+ Copyright ï¿½ 2024 Insoft. All rights reserved.
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -37,12 +37,16 @@
 #define PLL_2x  0b000001 // 7.25 MHz
 #define PLL_1x  0b000000 // 3.6 MHz
 
+#ifndef color_t
+#define color_t unsigned short
+#endif
+
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void fxEnableColor(void);
+void enableColor(void);
 
 /**
  @brief    Returns a color in RGB 565 format from a given RGB[0-255] value.
@@ -50,10 +54,10 @@ void fxEnableColor(void);
  @param    g  Green channel
  @param    b  Blue channel
  */
-uint16_t fxColor(uint8_t r, uint8_t g, uint8_t b);
+color_t color(uint8_t r, uint8_t g, uint8_t b);
 
-void fxPrint(int x, int y, const char *text, uint16_t color, uint16_t bgColor);
-void fxPrintMini(int x, int y, const char *text, uint16_t color, uint16_t bgColor);
+void print(int x, int y, const char *text, color_t color, color_t bgColor);
+void printMini(int x, int y, const char *text, color_t color, color_t bgColor);
 
 /**
  @brief    Write a line.  Bresenham's algorithm
@@ -63,7 +67,7 @@ void fxPrintMini(int x, int y, const char *text, uint16_t color, uint16_t bgColo
  @param    y2  End point y coordinate
  @param    color Specifies what color the plotted pixel will be. It is in RGB 565 format.
  */
-void fxDrawLine(int x1, int y1, int x2, int y2, uint16_t color);
+void drawLine(int x1, int y1, int x2, int y2, color_t color);
 
 /**
  @brief    Draw a rectangle with no fill color
@@ -73,7 +77,7 @@ void fxDrawLine(int x1, int y1, int x2, int y2, uint16_t color);
  @param    h   Height in pixels
  @param    color Specifies what color to draw with. It is in RGB 565 format.
  */
-void fxDrawRect(int x, int y, short w, short h, uint16_t color);
+void drawRect(int x, int y, short w, short h, color_t color);
 
 /**
  @brief    Draw a circle outline.
@@ -82,7 +86,7 @@ void fxDrawRect(int x, int y, short w, short h, uint16_t color);
  @param    r   Radius of circle.
  @param    color Specifies what color to draw with. It is in RGB 565 format.
  */
-void fxDrawCircle(int x, int y, short r, uint16_t color);
+void drawCircle(int x, int y, short r, color_t color);
 
 /**
  @brief    Draw a circle with filled color
@@ -90,7 +94,7 @@ void fxDrawCircle(int x, int y, short r, uint16_t color);
  @param    y   Center-point y coordinate
  @param    color Specifies what color to draw with. It is in RGB 565 format.
  */
-void fxFillCircle(int x, int y, short r, uint16_t color);
+void fillCircle(int x, int y, short r, color_t color);
 
 /**
  @brief    Draw a triangle with no fill color
@@ -102,7 +106,7 @@ void fxFillCircle(int x, int y, short r, uint16_t color);
  @param    y3  Vertex #3 y coordinate
  @param    color Specifies what color to draw with. It is in RGB 565 format.
  */
-void fxDrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint8_t color);
+void drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint8_t color);
 
 /**
  @brief    Draw a triangle with color-fill
@@ -114,7 +118,7 @@ void fxDrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint8_t colo
  @param    y3  Vertex #3 y coordinate
  @param    color Specifies what color to draw with. It is in RGB 565 format.
  */
-void fxFillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint16_t color);
+void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, color_t color);
 
 /**
  @brief    Draw a rounded rectangle with no fill color
@@ -125,7 +129,7 @@ void fxFillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint16_t col
  @param    r   Radius of corner rounding
  @param    color Specifies what color to draw with. It is in RGB 565 format.
  */
-void fxDrawRoundRect(int x, int y, int w, int h, short r, uint16_t color);
+void drawRoundRect(int x, int y, int w, int h, short r, color_t color);
 
 /**
  @brief    Draw a rounded rectangle with fill color
@@ -136,7 +140,7 @@ void fxDrawRoundRect(int x, int y, int w, int h, short r, uint16_t color);
  @param    r   Radius of corner rounding
  @param    color Specifies what color to draw with. It is in RGB 565 format.
  */
-void fxFillRoundRect(int x, int y, int w, int h, short r, uint16_t color);
+void fillRoundRect(int x, int y, int w, int h, short r, color_t color);
 
 /**
  @brief    Creates a RGB 565 format color on a grey value.
@@ -152,7 +156,7 @@ uint16_t fxMakeGray(int shade);
  @param    h   Height of the filled rectangle.
  @param    color Color of the filled rectangle.
  */
-void fxFillArea(unsigned x, unsigned y, unsigned w, unsigned h, uint16_t color);
+void fillArea(unsigned x, unsigned y, unsigned w, unsigned h, color_t color);
 
 /**
  @brief    Draws a signle pixel at (x,y)
@@ -160,15 +164,8 @@ void fxFillArea(unsigned x, unsigned y, unsigned w, unsigned h, uint16_t color);
  @param    y   Specifies the y coordinate of the pixel in range of [0,215]
  @param    color Specifies what color the plotted pixel will be. It is in RGB 565 format.
  */
-void fxPlot(int x, int y, uint16_t color);
+void drawPixel(int x, int y, color_t color);
 
-/**
- @brief    Draws a signle sub pixel at (x,y)
- @param    x   Specifies the x coordinate of the pixel in range of [0,383]
- @param    y   Specifies the y coordinate of the pixel in range of [0,215]
- @param    level Specifies what level the plotted sub pixel will be. It is in R/G/B format.
- */
-void fxSubPlot(unsigned x, unsigned y, uint8_t level);
 
 /**
  @brief    Draw a 16-bit sprite/image to the VRAM buffer.
@@ -178,7 +175,7 @@ void fxSubPlot(unsigned x, unsigned y, uint8_t level);
  @param    w   Width of sprite, in pixels.
  @param    h   Height of sprite, in pixels.
  */
-void fxDrawSprite(uint16_t *data, int x, int y, int w, int h);
+void drawSprite(uint16_t *data, int x, int y, int w, int h);
 
 /**
  @brief    Draw a 16-bit sprite/image to the VRAM buffer.
@@ -189,7 +186,7 @@ void fxDrawSprite(uint16_t *data, int x, int y, int w, int h);
  @param    h   Height of sprite, in pixels.
  @param    maskColor Color that should be treated as transparent.
  */
-void fxDrawSpriteMaskedAlpha(uint16_t *data, int x, int y, int w, int h, uint16_t maskColor, int alpha);
+void drawSpriteMaskedAlpha(uint16_t *data, int x, int y, int w, int h, uint16_t maskColor, int alpha);
 
 /**
  @brief    Draw an N-bit (for N=8, 2, or 1) sprite/image to the VRAM buffer.
@@ -201,7 +198,7 @@ void fxDrawSpriteMaskedAlpha(uint16_t *data, int x, int y, int w, int h, uint16_
  @param    palette A palette.
  @param    bitWidth The bit-width. This is designed for 8-, 2-, and 1-bit images.
  */
-void fxDrawSpriteNbit(const uint8_t *data, int x, int y, int w, int h, uint16_t *palette, unsigned int bitWidth);
+void drawSpriteNbit(const uint8_t *data, int x, int y, int w, int h, uint16_t *palette, unsigned int bitWidth);
 
 /**
  @brief    Draw an N-bit (for N=8, 2, or 1) sprite/image to the VRAM buffer, treating one color as transparent.
@@ -214,7 +211,7 @@ void fxDrawSpriteNbit(const uint8_t *data, int x, int y, int w, int h, uint16_t 
  @param    maskColor Color that should be treated as transparent.
  @param    bitWidth The bit-width. This is designed for 8-, 2-, and 1-bit images.
  */
-void fxDrawSpriteNbitMasked(const uint8_t *data, int x, int y, int w, int h, const uint16_t *palette, uint16_t maskColor, unsigned int bitWidth);
+void drawSpriteNbitMasked(const uint8_t *data, int x, int y, int w, int h, const uint16_t *palette, uint16_t maskColor, unsigned int bitWidth);
 
 /**
  @brief    Change the speed of the operating PLL circuit.

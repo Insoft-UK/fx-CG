@@ -113,7 +113,7 @@ void draw::line(int x1, int y1, int x2, int y2, color_t color)
         delta_y = y1 - y2;
     }
     
-    plot(x1, y1, color);
+    pixel(x1, y1, color);
     if (delta_x >= delta_y) {
         int error = delta_y - (delta_x >> 1);        // error may go below zero
         while (x1 != x2) {
@@ -125,7 +125,7 @@ void draw::line(int x1, int y1, int x2, int y2, color_t color)
             }                              // else do nothing
             x1 += ix;
             error += delta_y;
-            plot(x1, y1, color);
+            pixel(x1, y1, color);
         }
     } else {
         int error = delta_x - (delta_y >> 1);      // error may go below zero
@@ -138,7 +138,7 @@ void draw::line(int x1, int y1, int x2, int y2, color_t color)
             }                              // else do nothing
             y1 += iy;
             error += delta_x;
-            plot(x1, y1, color);
+            pixel(x1, y1, color);
         }
     }
 }
@@ -177,20 +177,20 @@ static void fxDrawCircleHelper(int x, int y, short r, uint8_t cornername, color_
         ddF_x += 2;
         f += ddF_x;
         if (cornername & 0x4) {
-            draw::plot(x + xx, y + yy, color);
-            draw::plot(x + yy, y + xx, color);
+            draw::pixel(x + xx, y + yy, color);
+            draw::pixel(x + yy, y + xx, color);
         }
         if (cornername & 0x2) {
-            draw::plot(x + xx, y - yy, color);
-            draw::plot(x + yy, y - xx, color);
+            draw::pixel(x + xx, y - yy, color);
+            draw::pixel(x + yy, y - xx, color);
         }
         if (cornername & 0x8) {
-            draw::plot(x - yy, y + xx, color);
-            draw::plot(x - xx, y + yy, color);
+            draw::pixel(x - yy, y + xx, color);
+            draw::pixel(x - xx, y + yy, color);
         }
         if (cornername & 0x1) {
-            draw::plot(x - yy, y - xx, color);
-            draw::plot(x - xx, y - yy, color);
+            draw::pixel(x - yy, y - xx, color);
+            draw::pixel(x - xx, y - yy, color);
         }
     }
 }
@@ -203,10 +203,10 @@ void draw::circle(int x, int y, short r, color_t color)
     short xx = 0;
     short yy = r;
     
-    plot(x, y + r, color);
-    plot(x, y - r, color);
-    plot(x + r, y, color);
-    plot(x - r, y, color);
+    pixel(x, y + r, color);
+    pixel(x, y - r, color);
+    pixel(x + r, y, color);
+    pixel(x - r, y, color);
     
     while (xx < yy) {
         if (f >= 0) {
@@ -218,14 +218,14 @@ void draw::circle(int x, int y, short r, color_t color)
         ddF_x += 2;
         f += ddF_x;
         
-        plot(x + xx, y + yy, color);
-        plot(x - xx, y + yy, color);
-        plot(x + xx, y - yy, color);
-        plot(x - xx, y - yy, color);
-        plot(x + yy, y + xx, color);
-        plot(x - yy, y + xx, color);
-        plot(x + yy, y - xx, color);
-        plot(x - yy, y - xx, color);
+        pixel(x + xx, y + yy, color);
+        pixel(x - xx, y + yy, color);
+        pixel(x + xx, y - yy, color);
+        pixel(x - xx, y - yy, color);
+        pixel(x + yy, y + xx, color);
+        pixel(x - yy, y + xx, color);
+        pixel(x + yy, y - xx, color);
+        pixel(x - yy, y - xx, color);
     }
 }
 
@@ -413,7 +413,6 @@ void draw::fillRoundRect(int x, int y, int w, int h, short r, color_t color)
 }
 
 
-
 void draw::fillArea(unsigned x, unsigned y, unsigned w, unsigned h, color_t color)
 {
     if (x > 383 || y > 215) return;
@@ -428,7 +427,7 @@ void draw::fillArea(unsigned x, unsigned y, unsigned w, unsigned h, color_t colo
 }
 
 
-void draw::plot(int x, int y, color_t color)
+void draw::pixel(int x, int y, color_t color)
 {
     if (x < 0 || y < 0) return;
     if (x > 383 || y > 215) return;

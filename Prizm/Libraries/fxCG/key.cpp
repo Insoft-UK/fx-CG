@@ -33,41 +33,41 @@
  to indicate the key press event. Conversely, when a key is released, the corresponding
  bit or bits are cleared to indicate the key release event.
  
-                                                                 Row : 16-bit (reg 0-4)
-     +-----------------------------------------------------------------------+
-     |   [F1]      [F2]      [F3]      [F4]      [F5]      [F6]              | 9 = (4)
-     |                                                                       |
-     |   [SHIFT]   [OPTN]    [VARS]    [MENU]    [LEFT]    [ UP ]            | 8 = (4)
-     |                                                                       |
-     |   [ALPHA]   [X^2]     [x√]      [EXIT]    [DOWN]    [RIGHT]           | 7 = (3)
-     |                                                                       |
-     |   [X,T,θ,n] [LOG]     [LN]      [SIN]     [COS]     [TAN]             | 6 = (3)
-     |                                                                       |
-     |   [abc]     [S<>D]    [(]       [)]       [,]       [-->]             | 5 = (2)
-     |                                                                       |
-     |   [7]       [8]       [9]       [DEL]                                 | 4 = (2)
-     |                                                                       |
-     |   [4]       [5]       [6]       [x]       [/]                         | 3 = (1)
-     |                                                                       |
-     |   [1]       [2]       [3]       [+]       [-]                         | 2 = (1)
-     |                                                                       |
-     |   [0]       [.]       [PI]      [(-)]     [EXE]                       | 1 = (0)
-     |                                                                       |
-     |                                                               [AC/ON] | 0 = (0)
-     +-----------------------------------------------------------------------+
-  Col    7         6         5         4         3         2         1
+                                                                    Row : 16-bit (reg 0-4)
+     +-----------------------------------------------------------------------------------+
+     |   [F1]      [F2]      [F3]      [F4]      [F5]      [F6]                          | 9 = (4)
+     |                                                                                   |
+     |   [SHIFT]   [OPTN]    [VARS]    [MENU]    [LEFT]    [ UP ]                        | 8 = (4)
+     |                                                                                   |
+     |   [ALPHA]   [X^2]     [x√]      [EXIT]    [DOWN]    [RIGHT]                       | 7 = (3)
+     |                                                                                   |
+     |   [X,T,θ,n] [LOG]     [LN]      [SIN]     [COS]     [TAN]                         | 6 = (3)
+     |                                                                                   |
+     |   [abc]     [S<>D]    [(]       [)]       [,]       [-->]                         | 5 = (2)
+     |                                                                                   |
+     |   [7]       [8]       [9]       [DEL]                                             | 4 = (2)
+     |                                                                                   |
+     |   [4]       [5]       [6]       [x]       [/]                                     | 3 = (1)
+     |                                                                                   |
+     |   [1]       [2]       [3]       [+]       [-]                                     | 2 = (1)
+     |                                                                                   |
+     |   [0]       [.]       [PI]      [(-)]     [EXE]                                   | 1 = (0)
+     |                                                                                   |
+     |                                                               [AC/ON]             | 0 = (0)
+     +----------------------------------------------------------------------------------+
+  Col    7         6         5         4         3         2         1         0
  
- *Bit    9         10        11        12        13        14        15
-**Bit    1         2         3         4         5         6         7
+ *Bit    8         9         10        11        12        13        14       15
+**Bit    0         1         2         3         4         5         6        7
  
  * When Row is even
 ** When Row is odd
  
+ 
  */
 
 #ifdef __clang__
-#include "fx-CG.h"
-
+#include "fxcg.h"
 #define FXCG50_KEY_REG _fxCG_0xA44B0000
 #else
 #define FXCG50_KEY_REG 0xA44B0000

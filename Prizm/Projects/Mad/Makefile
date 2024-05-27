@@ -20,13 +20,19 @@ include $(FXCGSDK)/toolchain/prizm_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
+
 ifndef SOURCES
 	SOURCES := src
 endif
+
+ADDITIONAL_SOURCE = ../../Libraries/fxCG
+SOURCES += $(ADDITIONAL_SOURCE)
+
 DATA		:=	data
 ifndef INCLUDES
-	INCLUDES :=
+	INCLUDES := ../../Libraries
 endif
+
 
 #---------------------------------------------------------------------------------
 # options for code and add-in generation

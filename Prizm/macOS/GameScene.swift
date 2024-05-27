@@ -35,8 +35,12 @@ class GameScene: SKScene {
         
         addChild(fxCGDisplayNode.shared)
         
+       
+        
+        
+        
         DispatchQueue.global(qos: .userInteractive).async {
-            fxCG_g3a()
+            g3a()
             _callback()
             exit(0)
         }
@@ -81,6 +85,8 @@ class GameScene: SKScene {
             fxCG_KeyDown(KEY_PRGM_F5)
         case 97:
             fxCG_KeyDown(KEY_PRGM_F6)
+        case 44:
+            fxCG_KeyDown(33) // '/'
         case 51:
             fxCG_KeyDown(44)
         case 53:
@@ -111,6 +117,8 @@ class GameScene: SKScene {
             fxCG_KeyDown(32)
         case 26:
             fxCG_KeyDown(KEY_PRGM_7)
+        case 47:
+            fxCG_KeyDown(61)
         case 28:
             fxCG_KeyDown(KEY_PRGM_8)
         case 25:
@@ -144,6 +152,8 @@ class GameScene: SKScene {
             fxCG_KeyUp(KEY_PRGM_F5)
         case 97:
             fxCG_KeyUp(KEY_PRGM_F6)
+        case 44:
+            fxCG_KeyUp(33) // '/'
         case 51:
             fxCG_KeyUp(44)
         case 53:
@@ -178,6 +188,8 @@ class GameScene: SKScene {
             fxCG_KeyUp(KEY_PRGM_8)
         case 25:
             fxCG_KeyUp(KEY_PRGM_9)
+        case 47:
+            fxCG_KeyUp(61)
         case 124:
             fxCG_KeyUp(KEY_PRGM_RIGHT)
         case 123:

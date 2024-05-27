@@ -1,5 +1,5 @@
 /*
- Copyright © 2024 Insoft. All rights reserved.
+ Copyright ï¿½ 2024 Insoft. All rights reserved.
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -46,19 +46,19 @@ extern "C" {
 /**
  @brief    Reset key states.
  */
-void fxKeyReset(void);
+void keyReset(void);
 
 /**
  @brief    Takes a key reading of the keyboard register.
  */
-void fxKeyUpdate(void);
+void keyUpdate(void);
 
 /**
  @brief    Returns key code of key that has been pressed down.
  
  keyUpdate required before using this function.
  */
-KeyCode fxKeyPressed(void);
+KeyCode keyPressed(void);
 
 /**
  @brief    Returns true if key has is being held down.
@@ -66,7 +66,7 @@ KeyCode fxKeyPressed(void);
  
  keyUpdate not required.
  */
-bool fxIsKeyHeld(KeyCode keyCode);
+bool isKeyHeld(KeyCode keyCode);
 
 /**
  @brief    Returns true if key has just been pressed.
@@ -74,7 +74,7 @@ bool fxIsKeyHeld(KeyCode keyCode);
  
  keyUpdate required before using this function.
  */
-bool fxIsKeyPressed(KeyCode keyCode);
+bool isKeyPressed(KeyCode keyCode);
 
 /**
  @brief    Returns true if key has just been released
@@ -82,7 +82,7 @@ bool fxIsKeyPressed(KeyCode keyCode);
  
  keyUpdate required before using this function.
  */
-bool fxIsKeyReleased(KeyCode keyCode);
+bool isKeyReleased(KeyCode keyCode);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus

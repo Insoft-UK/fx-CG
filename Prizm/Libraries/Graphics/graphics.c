@@ -1,5 +1,5 @@
 /*
- Copyright © 2024 Insoft. All rights reserved.
+ Copyright ï¿½ 2024 Insoft. All rights reserved.
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -29,17 +29,17 @@
 #include <fxcg/display.h>
 #endif
 
-void fxEnableColor(void)
+void enableColor(void)
 {
     Bdisp_EnableColor(1);
 }
 
-void fxPrint(int x, int y, const char *text, uint16_t color, uint16_t bgColor)
+void print(int x, int y, const char *text, color_t color, color_t bgColor)
 {
     PrintCXY(x, y, text, FXCGTextModeNormal,  -1 , color, bgColor, 1, 0);
 }
 
-void fxPrintMini(int x, int y, const char *text, uint16_t color, uint16_t bgColor)
+void printMini(int x, int y, const char *text, color_t color, color_t bgColor)
 {
     PrintMini(&x, &y, text, 0x40,  0xFFFFFFFF , 0, 0, color, bgColor, 1, 0);
 }
@@ -51,11 +51,11 @@ void fxPrintMini(int x, int y, const char *text, uint16_t color, uint16_t bgColo
  @param    w   Width in pixels
  @param    color Specifies what color the plotted pixel will be. It is in RGB 565 format.
  */
-static void fxDrawFastHLine(unsigned x, unsigned y, unsigned w, uint16_t color)
+static void drawFastHLine(unsigned x, unsigned y, unsigned w, color_t color)
 {
     if (y > 215) return;
     while (w--) {
-        fxPlot(x++, y, color);
+        plot(x++, y, color);
         if (x > 383) return;
     }
 }
@@ -67,11 +67,11 @@ static void fxDrawFastHLine(unsigned x, unsigned y, unsigned w, uint16_t color)
  @param    h   Height in pixels
  @param    color Specifies what color the plotted pixel will be. It is in RGB 565 format.
  */
-static void fxDrawFastVLine(unsigned x, unsigned y, unsigned h, uint16_t color)
+static void drawFastVLine(unsigned x, unsigned y, unsigned h, color_t color)
 {
     if (x > 383) return;
     while (h--) {
-        fxPlot(x, y++, color);
+        plot(x, y++, color);
         if (y > 215) return;
     }
 }
@@ -84,9 +84,9 @@ static void swap(int *x, int *y) {
     // it is really x = (x ^ y) ^ x, so x = original y
 }
 
-uint16_t fxColor(uint8_t r, uint8_t g, uint8_t b)
+color_t color(uint8_t r, uint8_t g, uint8_t b)
 {
-    uint16_t color, channel;
+    color_t color, channel;
     
     channel = (uint16_t)((float)r / 255.0 * 31.0);
     color = channel;
@@ -98,19 +98,19 @@ uint16_t fxColor(uint8_t r, uint8_t g, uint8_t b)
     return color;
 }
 
-void fxDrawLine(int x1, int y1, int x2, int y2, uint16_t color)
+void drawLine(int x1, int y1, int x2, int y2, color_t color)
 {
     if (x1 == x2) {
         if (y1 > y2)
             swap(&y1, &y2);
-        fxDrawFastVLine(x1, y1, y2 - y1 + 1, color);
+        drawFastVLine(x1, y1, y2 - y1 + 1, color);
         return;
     }
     
     if (y1 == y2) {
         if (x1 > x2)
             swap(&x1, &x2);
-        fxDrawFastHLine(x1, y1, x2 - x1 + 1, color);
+        drawFastHLine(x1, y1, x2 - x1 + 1, color);
         return;
     }
     
@@ -137,7 +137,7 @@ void fxDrawLine(int x1, int y1, int x2, int y2, uint16_t color)
         delta_y = y1 - y2;
     }
     
-    fxPlot(x1, y1, color);
+    plot(x1, y1, color);
     if (delta_x >= delta_y) {
         int error = delta_y - (delta_x >> 1);        // error may go below zero
         while (x1 != x2) {
@@ -149,7 +149,7 @@ void fxDrawLine(int x1, int y1, int x2, int y2, uint16_t color)
             }                              // else do nothing
             x1 += ix;
             error += delta_y;
-            fxPlot(x1, y1, color);
+            plot(x1, y1, color);
         }
     } else {
         int error = delta_x - (delta_y >> 1);      // error may go below zero
@@ -162,17 +162,17 @@ void fxDrawLine(int x1, int y1, int x2, int y2, uint16_t color)
             }                              // else do nothing
             y1 += iy;
             error += delta_x;
-            fxPlot(x1, y1, color);
+            plot(x1, y1, color);
         }
     }
 }
 
-void fxDrawRect(int x, int y, short w, short h, uint16_t color)
+void drawRect(int x, int y, short w, short h, color_t color)
 {
-    fxDrawFastHLine(x, y, w, color);
-    fxDrawFastHLine(x, y + h - 1, w, color);
-    fxDrawFastVLine(x, y, h, color);
-    fxDrawFastVLine(x + w - 1, y, h, color);
+    drawFastHLine(x, y, w, color);
+    drawFastHLine(x, y + h - 1, w, color);
+    drawFastVLine(x, y, h, color);
+    drawFastVLine(x + w - 1, y, h, color);
 }
 
 /**
@@ -183,7 +183,7 @@ void fxDrawRect(int x, int y, short w, short h, uint16_t color)
  @param    cornername  Mask bit #1 or bit #2 to indicate which quarters of the circle we're doing.
  @param    color Specifies what color to draw with. It is in RGB 565 format.
  */
-static void fxDrawCircleHelper(int x, int y, short r, uint8_t cornername, uint16_t color)
+static void drawCircleHelper(int x, int y, short r, uint8_t cornername, color_t color)
 {
     short f = 1 - r;
     short ddF_x = 1;
@@ -201,25 +201,25 @@ static void fxDrawCircleHelper(int x, int y, short r, uint8_t cornername, uint16
         ddF_x += 2;
         f += ddF_x;
         if (cornername & 0x4) {
-            fxPlot(x + xx, y + yy, color);
-            fxPlot(x + yy, y + xx, color);
+            plot(x + xx, y + yy, color);
+            plot(x + yy, y + xx, color);
         }
         if (cornername & 0x2) {
-            fxPlot(x + xx, y - yy, color);
-            fxPlot(x + yy, y - xx, color);
+            plot(x + xx, y - yy, color);
+            plot(x + yy, y - xx, color);
         }
         if (cornername & 0x8) {
-            fxPlot(x - yy, y + xx, color);
-            fxPlot(x - xx, y + yy, color);
+            plot(x - yy, y + xx, color);
+            plot(x - xx, y + yy, color);
         }
         if (cornername & 0x1) {
-            fxPlot(x - yy, y - xx, color);
-            fxPlot(x - xx, y - yy, color);
+            plot(x - yy, y - xx, color);
+            plot(x - xx, y - yy, color);
         }
     }
 }
 
-void fxDrawCircle(int x, int y, short r, uint16_t color)
+void drawCircle(int x, int y, short r, color_t color)
 {
     short f = 1 - r;
     short ddF_x = 1;
@@ -227,10 +227,10 @@ void fxDrawCircle(int x, int y, short r, uint16_t color)
     short xx = 0;
     short yy = r;
     
-    fxPlot(x, y + r, color);
-    fxPlot(x, y - r, color);
-    fxPlot(x + r, y, color);
-    fxPlot(x - r, y, color);
+    plot(x, y + r, color);
+    plot(x, y - r, color);
+    plot(x + r, y, color);
+    plot(x - r, y, color);
     
     while (xx < yy) {
         if (f >= 0) {
@@ -242,14 +242,14 @@ void fxDrawCircle(int x, int y, short r, uint16_t color)
         ddF_x += 2;
         f += ddF_x;
         
-        fxPlot(x + xx, y + yy, color);
-        fxPlot(x - xx, y + yy, color);
-        fxPlot(x + xx, y - yy, color);
-        fxPlot(x - xx, y - yy, color);
-        fxPlot(x + yy, y + xx, color);
-        fxPlot(x - yy, y + xx, color);
-        fxPlot(x + yy, y - xx, color);
-        fxPlot(x - yy, y - xx, color);
+        plot(x + xx, y + yy, color);
+        plot(x - xx, y + yy, color);
+        plot(x + xx, y - yy, color);
+        plot(x - xx, y - yy, color);
+        plot(x + yy, y + xx, color);
+        plot(x - yy, y + xx, color);
+        plot(x + yy, y - xx, color);
+        plot(x - yy, y - xx, color);
     }
 }
 
@@ -262,7 +262,7 @@ void fxDrawCircle(int x, int y, short r, uint16_t color)
  @param    delta    Offset from center-point, used for round-rects.
  @param    color Specifies what color to draw with. It is in RGB 565 format.
  */
-static void fxFillCircleHelper(int x, int y, short r, uint8_t corners, short delta, uint16_t color)
+static void fillCircleHelper(int x, int y, short r, uint8_t corners, short delta, color_t color)
 {
     short f = 1 - r;
     short ddF_x = 1;
@@ -287,15 +287,15 @@ static void fxFillCircleHelper(int x, int y, short r, uint8_t corners, short del
         // for the SSD1306 library which has an INVERT drawing mode.
         if (xx < (yy + 1)) {
             if (corners & 1)
-                fxDrawFastVLine(x + xx, y - yy, 2 * yy + delta, color);
+                drawFastVLine(x + xx, y - yy, 2 * yy + delta, color);
             if (corners & 2)
-                fxDrawFastVLine(x - xx, y - yy, 2 * yy + delta, color);
+                drawFastVLine(x - xx, y - yy, 2 * yy + delta, color);
         }
         if (yy != py) {
             if (corners & 1)
-                fxDrawFastVLine(x + py, y - px, 2 * px + delta, color);
+                drawFastVLine(x + py, y - px, 2 * px + delta, color);
             if (corners & 2)
-                fxDrawFastVLine(x - py, y - px, 2 * px + delta, color);
+                drawFastVLine(x - py, y - px, 2 * px + delta, color);
             py = yy;
         }
         px = xx;
@@ -303,24 +303,24 @@ static void fxFillCircleHelper(int x, int y, short r, uint8_t corners, short del
 }
 
 
-void fxFillCircle(int x, int y, short r, uint16_t color)
+void fillCircle(int x, int y, short r, color_t color)
 {
     
-    fxDrawFastVLine(x, y - r, 2 * r + 1, color);
-    fxFillCircleHelper(x, y, r, 3, 0, color);
+    drawFastVLine(x, y - r, 2 * r + 1, color);
+    fillCircleHelper(x, y, r, 3, 0, color);
     
 }
 
 
-void fxDrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint8_t color)
+void drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint8_t color)
 {
-    fxDrawLine(x1, y1, x2, y2, color);
-    fxDrawLine(x2, y2, x3, y3, color);
-    fxDrawLine(x3, y3, x1, y1, color);
+    drawLine(x1, y1, x2, y2, color);
+    drawLine(x2, y2, x3, y3, color);
+    drawLine(x3, y3, x1, y1, color);
 }
 
 
-void fxFillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint16_t color)
+void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, color_t color)
 {
     
     int a, b, y, last;
@@ -349,7 +349,7 @@ void fxFillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint16_t col
             a = x3;
         else if (x3 > b)
             b = x3;
-        fxDrawFastHLine(a, y1, b - a + 1, color);
+        drawFastHLine(a, y1, b - a + 1, color);
         return;
     }
     
@@ -378,7 +378,7 @@ void fxFillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint16_t col
         
         if (a > b)
             swap(&a, &b);
-        fxDrawFastHLine(a, y, b - a + 1, color);
+        drawFastHLine(a, y, b - a + 1, color);
     }
     
     // For lower part of triangle, find scanline crossings for segments
@@ -393,27 +393,27 @@ void fxFillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint16_t col
         
         if (a > b)
             swap(&a, &b);
-        fxDrawFastHLine(a, y, b - a + 1, color);
+        drawFastHLine(a, y, b - a + 1, color);
     }
 }
 
 
-void fxDrawRoundRect(int x, int y, int w, int h, short r, uint16_t color)
+void drawRoundRect(int x, int y, int w, int h, short r, color_t color)
 {
     int max_radius = ((w < h) ? w : h) / 2; // 1/2 minor axis
     if (r > max_radius)
         r = max_radius;
     // smarter version
   
-    fxDrawFastHLine(x + r, y, w - 2 * r, color);         // Top
-    fxDrawFastHLine(x + r, y + h - 1, w - 2 * r, color); // Bottom
-    fxDrawFastVLine(x, y + r, h - 2 * r, color);         // Left
-    fxDrawFastVLine(x + w - 1, y + r, h - 2 * r, color); // Right
+    drawFastHLine(x + r, y, w - 2 * r, color);         // Top
+    drawFastHLine(x + r, y + h - 1, w - 2 * r, color); // Bottom
+    drawFastVLine(x, y + r, h - 2 * r, color);         // Left
+    drawFastVLine(x + w - 1, y + r, h - 2 * r, color); // Right
     // draw four corners
-    fxDrawCircleHelper(x + r, y + r, r, 1, color);
-    fxDrawCircleHelper(x + w - r - 1, y + r, r, 2, color);
-    fxDrawCircleHelper(x + w - r - 1, y + h - r - 1, r, 4, color);
-    fxDrawCircleHelper(x + r, y + h - r - 1, r, 8, color);
+    drawCircleHelper(x + r, y + r, r, 1, color);
+    drawCircleHelper(x + w - r - 1, y + r, r, 2, color);
+    drawCircleHelper(x + w - r - 1, y + h - r - 1, r, 4, color);
+    drawCircleHelper(x + r, y + h - r - 1, r, 8, color);
 }
 
 /**
@@ -425,15 +425,15 @@ void fxDrawRoundRect(int x, int y, int w, int h, short r, uint16_t color)
  @param    r   Radius of corner rounding
  @param    color Specifies what color to draw with. It is in RGB 565 format.
  */
-void fxFillRoundRect(int x, int y, int w, int h, short r, uint16_t color)
+void fillRoundRect(int x, int y, int w, int h, short r, color_t color)
 {
     int max_radius = ((w < h) ? w : h) / 2; // 1/2 minor axis
     if (r > max_radius)
         r = max_radius;
   
-    fxFillArea(x + r, y, w - 2 * r, h, color);
-    fxFillCircleHelper(x + w - r - 1, y + r, r, 1, h - 2 * r - 1, color);
-    fxFillCircleHelper(x + r, y + r, r, 2, h - 2 * r - 1, color);
+    fillArea(x + r, y, w - 2 * r, h, color);
+    fillCircleHelper(x + w - r - 1, y + r, r, 1, h - 2 * r - 1, color);
+    fillCircleHelper(x + r, y + r, r, 2, h - 2 * r - 1, color);
 }
 
 
@@ -443,7 +443,7 @@ uint16_t fxMakeGray(int shade)
 }
 
 
-void fxFillArea(unsigned x, unsigned y, unsigned w, unsigned h, uint16_t color)
+void fillArea(unsigned x, unsigned y, unsigned w, unsigned h, color_t color)
 {
     if (x > 383 || y > 215) return;
     uint16_t *VRAM = (uint16_t*)GetVRAMAddress();
@@ -457,7 +457,7 @@ void fxFillArea(unsigned x, unsigned y, unsigned w, unsigned h, uint16_t color)
 }
 
 
-void fxPlot(int x, int y, uint16_t color)
+void drawPixel(int x, int y, color_t color)
 {
     if (x < 0 || y < 0) return;
     if (x > 383 || y > 215) return;
@@ -465,30 +465,7 @@ void fxPlot(int x, int y, uint16_t color)
     VRAM[x + y * 384] = color;
 }
 
-void fxSubPlot(unsigned x, unsigned y, uint8_t level)
-{
-    if (x > 1151 || y > 215) return;
-    uint16_t *VRAM = (uint16_t *)GetVRAMAddress();
-    
-    int sub = x % 3;
-    x /= 3;
-    switch (sub) {
-        case 0:
-            VRAM[x + y * 384] = (VRAM[x + y * 384] & 0x07FF) | fxColor(level, 0, 0);
-            break;
-            
-        case 1:
-            VRAM[x + y * 384] = (VRAM[x + y * 384] & 0xF81F) | fxColor(0, level, 0);
-            break;
-            
-        case 2:
-            VRAM[x + y * 384] = (VRAM[x + y * 384] & 0xFFE0) | fxColor(0, 0, level);
-            break;
-    }
-}
-
-
-void fxDrawSprite(uint16_t* data, int x, int y, int w, int h)
+void drawSprite(uint16_t* data, int x, int y, int w, int h)
 {
     uint16_t *VRAM = (uint16_t*)GetVRAMAddress();
     VRAM += 384*y + x;
@@ -501,7 +478,7 @@ void fxDrawSprite(uint16_t* data, int x, int y, int w, int h)
 }
 
 
-void fxDrawSpriteMaskedAlpha(uint16_t* data, int x, int y, int w, int h, uint16_t maskColor, int alpha)
+void drawSpriteMaskedAlpha(uint16_t* data, int x, int y, int w, int h, uint16_t maskColor, int alpha)
 {
     uint16_t* VRAM = (uint16_t*)GetVRAMAddress();
     VRAM += LCD_WIDTH_PX*y + x;
@@ -521,7 +498,7 @@ void fxDrawSpriteMaskedAlpha(uint16_t* data, int x, int y, int w, int h, uint16_
 }
 
 
-void fxDrawSpriteNbit(const uint8_t* data, int x, int y, int w, int h, uint16_t* palette, unsigned int bitWidth)
+void drawSpriteNbit(const uint8_t* data, int x, int y, int w, int h, uint16_t* palette, unsigned int bitWidth)
 {
     color_t* VRAM = (color_t*) GetVRAMAddress();
     VRAM += (LCD_WIDTH_PX*y + x);
@@ -545,7 +522,7 @@ void fxDrawSpriteNbit(const uint8_t* data, int x, int y, int w, int h, uint16_t*
 }
 
 
-void fxDrawSpriteNbitMasked(const uint8_t *data, int x, int y, int w, int h, const uint16_t* palette, uint16_t maskColor, unsigned int bitWidth)
+void drawSpriteNbitMasked(const uint8_t *data, int x, int y, int w, int h, const uint16_t* palette, uint16_t maskColor, unsigned int bitWidth)
 {
     color_t* VRAM = (color_t*) GetVRAMAddress();
     VRAM += (LCD_WIDTH_PX*y + x);
@@ -559,7 +536,7 @@ void fxDrawSpriteNbitMasked(const uint8_t *data, int x, int y, int w, int h, con
                 availbits = 8;
             }
             uint16_t this = ((uint16_t)buf>>(8-bitWidth));
-            uint16_t color = palette[this];
+            color_t color = palette[this];
             if(color != maskColor) {
                 *VRAM = color;
             }

@@ -20,13 +20,13 @@
  THE SOFTWARE.
  */
 
-#include "fxCG.hpp"
+#include "fxCG/fxCG.hpp"
+#include "fxCG/draw.hpp"
+#include "fxCG/key.hpp"
+#include "fxCG/font.hpp"
 #include "C437.h"
 
 using namespace fxCG;
-using namespace draw;
-using namespace key;
-using namespace font;
 
 #define COPYRIGHT   "COPYRIGHT 1985 E.C. PUBLICATIONS"
 #define END_OF_DATA 999
@@ -165,20 +165,20 @@ static int data[] = {
 };
 
 int Splash(void) {
-    fillArea(0, 0, LCD_WIDTH_PX, LCD_HEIGHT_PX, white);
+    draw::fillArea(0, 0, LCD_WIDTH_PX, LCD_HEIGHT_PX, white);
    
-    print((width - strlen("PRESS [EXE] KEY") * 8) / 2, height - 32, "PRESS [EXE] KEY", black, C437);
-    print((width - strlen(COPYRIGHT) * 8) / 2, height - 16, COPYRIGHT, black, C437);
+    font::print((width - strlen("PRESS [EXE] KEY") * 8) / 2, height - 32, "PRESS [EXE] KEY", black, C437);
+    font::print((width - strlen(COPYRIGHT) * 8) / 2, height - 16, COPYRIGHT, black, C437);
     updateDisplay();
-    reset();
+    key::reset();
     
     while (true) {
-        update();
+        key::update();
         
-        if (isPressed(Return))
+        if (key::isPressed(key::Return))
             return 0;
         
-        if (isPressed(Menu))
+        if (key::isPressed(key::Menu))
             return -1;
     }
     
@@ -189,7 +189,7 @@ void Draw(void) {
     unsigned short color;
     
     color = fxCG::color(255, 255, 255);
-    fillArea(0, 0, LCD_WIDTH_PX, LCD_HEIGHT_PX, green);
+    draw::fillArea(0, 0, LCD_WIDTH_PX, LCD_HEIGHT_PX, green);
     
     int x1,y1,x2,y2;
     
@@ -201,15 +201,15 @@ void Draw(void) {
         x2 = LCD_WIDTH_PX / 2 + data[i+2];
         y2 = LCD_HEIGHT_PX / 2 - data[i+3];
         
-        line(x1, y1, x2, y2, color);
-        line(x1 + 1, y1, x2 + 1, y2, color);
+        draw::line(x1, y1, x2, y2, color);
+        draw::line(x1 + 1, y1, x2 + 1, y2, color);
         
         i+=4;
         if (data[i] == END_OF_DATA) break;
     }
     
-    print((width - strlen("WHAT, ME WORRY?") * 8) / 2, height - 32, "WHAT, ME WORRY?", color, C437);
-    print((width - strlen(COPYRIGHT) * 8) / 2, height - 16, COPYRIGHT, black, C437);
+    font::print((width - strlen("WHAT, ME WORRY?") * 8) / 2, height - 32, "WHAT, ME WORRY?", color, C437);
+    font::print((width - strlen(COPYRIGHT) * 8) / 2, height - 16, COPYRIGHT, black, C437);
     
     updateDisplay();
 }
@@ -218,7 +218,7 @@ extern void *FontBytes(void);
 
 
 // MARK: - CASIO fxCG Add-In Application "main" Function
-int fxCG_g3a(void) {
+int g3a(void) {
     
     // Switches the screen to full color mode (16 bits per pixel, RGB565)
     enableColor();
@@ -231,9 +231,9 @@ int fxCG_g3a(void) {
     Draw();
     
     while (true) {
-        update();
+        key::update();
         
-        if (isPressed(Exit) | isPressed(Menu))
+        if (key::isPressed(key::Exit) | key::isPressed(key::Menu))
             break;
     }
     

@@ -36,10 +36,6 @@ void fxCG::clearDisplay(color_t color)
     }
 }
 
-void fxCG::updateDisplay()
-{
-    Bdisp_PutDisp_DD();
-}
 
 color_t fxCG::color(uint8_t r, uint8_t g, uint8_t b)
 {
@@ -82,7 +78,4 @@ void fxCG::changeFreq(int mult)
 #endif
 }
 
-void fxCG::wait(int ms)
-{
-    OS_InnerWait_ms(ms);
-}
+

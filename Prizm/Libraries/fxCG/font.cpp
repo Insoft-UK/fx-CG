@@ -48,7 +48,7 @@ int font::glyph(int16_t x, int16_t y, uint8_t c, uint16_t color, GFXfont font)
                 bitmap++;
             }
             if (*bitmap & bitPosition) {
-                draw::plot(x + xx, y, color);
+                draw::pixel(x + xx, y, color);
             }
             bitPosition >>= 1;
         }

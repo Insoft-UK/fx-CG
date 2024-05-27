@@ -7,8 +7,6 @@
 extern "C" {
 #endif
 
-typedef int handle_t;
-
 enum
 {
   CREATEMODE_FILE = 1,
@@ -24,21 +22,21 @@ enum
   READWRITE_SHARE = 4
 };
 
-int Bfile_CloseFile_OS( handle_t handle );
+int Bfile_CloseFile_OS( int HANDLE );
 int Bfile_CreateEntry_OS( const unsigned short*filename, int mode, size_t *size);
 int Bfile_DeleteEntry( const unsigned short *filename );
 int Bfile_RenameEntry( const unsigned short *oldpath, const unsigned short *newpath );
-int Bfile_FindClose( handle_t handle );
+int Bfile_FindClose( int FindHandle );
 int Bfile_FindFirst( const char *pathname, int *FindHandle, char *foundfile, void *fileinfo );
 int Bfile_FindFirst_NON_SMEM( const char *pathname, int *FindHandle, char *foundfile, void *fileinfo );
-int Bfile_FindNext( handle_t handle, char *foundfile, char *fileinfo );
-int Bfile_FindNext_NON_SMEM( handle_t handle, char *foundfile, char *fileinfo );
-int Bfile_GetFileSize_OS( handle_t handle );
+int Bfile_FindNext( int FindHandle, char *foundfile, char *fileinfo );
+int Bfile_FindNext_NON_SMEM( int FindHandle, char *foundfile, char *fileinfo );
+int Bfile_GetFileSize_OS(int handle);
 int Bfile_OpenFile_OS(const unsigned short *filename, int mode, int null);
-int Bfile_ReadFile_OS( handle_t handle, void *buf, int size, int readpos );
-int Bfile_SeekFile_OS( handle_t handle, int pos );
-int Bfile_TellFile_OS( handle_t handle );
-int Bfile_WriteFile_OS( handle_t handle, const void *buf, int size );
+int Bfile_ReadFile_OS( int HANDLE, void *buf, int size, int readpos );
+int Bfile_SeekFile_OS( int handle, int pos );
+int Bfile_TellFile_OS( int handle );
+int Bfile_WriteFile_OS( int HANDLE, const void *buf, int size );
 void Bfile_NameToStr_ncpy(char* dest, const unsigned short* source, size_t n);
 void Bfile_StrToName_ncpy(unsigned short *dest, const char *source, size_t n);
 int Bfile_Name_MatchMask( const short*mask, const short*filename  );
@@ -51,7 +49,7 @@ int Bfile_GetMediaFree_OS( unsigned short*media_id, int*freespace );
 	!Warning! This address is no longer valid if any OS file operations are
 	performed.
 */
-int Bfile_GetBlockAddress( handle_t handle, int blockAddress, unsigned char** outPtr );
+int Bfile_GetBlockAddress(int handle, int blockAddress, unsigned char** outPtr);
 
 int SMEM_FindFirst( const unsigned short*pattern, unsigned short*foundfile );
 

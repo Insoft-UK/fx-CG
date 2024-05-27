@@ -20,11 +20,11 @@
  THE SOFTWARE.
  */
 
-#include "fxCG.hpp"
+#include "fxCG/fxCG.hpp"
+#include "fxCG/key.hpp"
+#include "fxCG/draw.hpp"
 
 using namespace fxCG;
-using namespace draw;
-using namespace key;
 
 static int data[] = {
     -2,1,1155,879,1123,906,
@@ -1003,7 +1003,7 @@ void DrawShuttle(void)
     TPt pt1, pt2;
     
     color = fxCG::color(0, 0, 0);
-    fillArea(0, 0, width, height, black);
+    draw::fillArea(0, 0, width, height, black);
     idx = 0;
     n = data[idx];
     while (n != 0) {
@@ -1013,16 +1013,16 @@ void DrawShuttle(void)
             color = GetPenColor(data[idx]);
             idx++;
         }
-            pt1 = GetPt(idx);
+        pt1 = GetPt(idx);
+        idx += 2;
+        n -= 1;
+        while (n > 0.001) {
+            pt2 = GetPt(idx);
             idx += 2;
             n -= 1;
-            while (n > 0.001) {
-                pt2 = GetPt(idx);
-                idx += 2;
-                n -= 1;
-                line(pt1.x, pt1.y, pt2.x, pt2.y, color);
-                pt1 = pt2;
-            }
+            draw::line(pt1.x, pt1.y, pt2.x, pt2.y, color);
+            pt1 = pt2;
+        }
         
         n = data[idx];
     }
@@ -1042,17 +1042,17 @@ void UI_Fn(int n, const char *s, FnType type) {
     
     switch (type) {
         case kFnType_Menu:
-            fillRoundRect(n + 1, height - 23, 62, 22, 1, black);
-            fillTriangle(n + 57, height - 2, n + 62, height - 2, n + 62, height - 7, white);
+            draw::fillRoundRect(n + 1, height - 23, 62, 22, 1, black);
+            draw::fillTriangle(n + 57, height - 2, n + 62, height - 2, n + 62, height - 7, white);
             break;
             
         case kFnType_Item:
-            fillArea(n + 1, height - 23, 62, 22, black);
+            draw::fillArea(n + 1, height - 23, 62, 22, black);
             break;
             
         case kFnType_Action:
-            fillRoundRect(n + 1, height - 23, 62, 22, 1, black);
-            fillArea(n + 3, height - 21, 58, 18, white);
+            draw::fillRoundRect(n + 1, height - 23, 62, 22, 1, black);
+            draw::fillArea(n + 3, height - 21, 58, 18, white);
             break;
             
         default:
@@ -1060,8 +1060,18 @@ void UI_Fn(int n, const char *s, FnType type) {
     }
 }
 
+
+void quitHandler(void)
+{
+    FrameColor(FXCGFrameModeSetToColor, white);
+    DrawFrame(white);
+}
+
 // MARK: - CASIO fxCG Add-In Application "main" Function
-int fxCG_g3a(void) {
+int g3a(void)
+{
+    SetQuitHandler(quitHandler);
+    
     // Switches the screen to full color mode (16 bits per pixel, RGB565)
     Bdisp_EnableColor(1);
     
@@ -1070,21 +1080,17 @@ int fxCG_g3a(void) {
     DrawFrame(black);
     
     DrawShuttle();
-    Bdisp_PutDisp_DD();
-    reset();
+    updateDisplay();
+    key::reset();
     
-    bool running = true;
-    while (running) {
-        update();
-        
-        if (isPressed(Menu)) {
-            reset();
-            running = false;
+    loop {
+        key::update();
+        if (key::isPressed(key::Menu)) {
+            key::reset();
+            break;
         }
+        wait(40);
     }
-    running = true;
-    // Sets the screen border color back to white.
-    FrameColor(FXCGFrameModeSetToColor, white);
-    DrawFrame(white);
+    
     return 0;
 }

@@ -8,8 +8,6 @@ if [ build ]; then
 fi
 rm *.g3a
 
-export SOURCES=src
-export INCLUDES=../../Libraries
 export NAME=$(basename $(pwd))
 export VERSION=$(head -n 1 version.txt | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
 make
