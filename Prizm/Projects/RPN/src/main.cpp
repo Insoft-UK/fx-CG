@@ -24,12 +24,13 @@
 #include "fxCG/draw.hpp"
 #include "fxCG/key.hpp"
 #include "fxCG/font.hpp"
+#include "fxCG/math.hpp"
 #include "C437.h"
 
 #include <stdlib.h>
 
-#define RPN_INPUT (216 - 24 - 16)
-#define RPN_STACK (RPN_INPUT - 16)
+#define RPN_INPUT (216 - 24 - 24)
+#define RPN_STACK (RPN_INPUT - 24)
 
 //#define LCD_WIDTH_PX 384
 //#define LCD_HEIGHT_PX 216
@@ -41,23 +42,23 @@ using namespace font;
 
 char digit(Code code)
 {
-    int row = code % 10;
-    int col = code / 10;
-    
-    if (row < 1 || row > 4 || col < 5) return 0;
-    
-    col = abs(col - 7);
-    row = abs(row - 4);
-    
-    char map[4][4] = {
-        "789",
-        "456",
-        "123",
-        "0.\0"
-    };
-    
-    return map[row][col];
+    switch (code) {
+        case key::K0: return '0';
+        case key::K1: return '1';
+        case key::K2: return '2';
+        case key::K3: return '3';
+        case key::K4: return '4';
+        case key::K5: return '5';
+        case key::K6: return '6';
+        case key::K7: return '7';
+        case key::K8: return '8';
+        case key::K9: return '9';
+            
+        default:
+            return 0;
+    }
 }
+
 
 class RPN {
 private:
@@ -122,8 +123,20 @@ public:
     {
         switch (op) {
             case '/':
-                if (b == 0) return 0;
+                if (b == 0) return NAN;
                 return a / b;
+                
+            case '*': return a * b;
+            case '-': return a - b;
+            case '+': return a + b;
+            case '%': return math::fmod(a, b);
+            case '^': return math::pow(a, b);
+            case 's': return math::sin(a);
+            case 'c': return math::cos(a);
+            case 't': return math::tan(a);
+            case 'l': return math::log10(a);
+            case 'n': return math::log(a);
+            case 'S': return a * a;
                 
             default:
                 return 0;
@@ -142,10 +155,12 @@ public:
             case '+':
             case '^':
             case '%':
+                if (!_sp) return;
                 b = top(); _sp--;
                 break;
         }
         
+        if (!_sp) return;
         a = top(); _sp--;
         
         double result = applyOperator(a, b, op);
@@ -157,15 +172,15 @@ public:
     {
         char buf[300];
         int y = RPN_STACK;
-        for (int i=0; i<_sp && i < 9; i++, y-=16) {
-            sprintf(buf, "%d", i + 1);
-            int X = 0;
-            int Y = y - 22;
-            PrintMiniMini(&X, &Y, buf, 0, black, 0);
-//            print(0, y, buf, black, C437);
+        for (int i=0; i<_sp && i < 6; i++, y-=24) {
             sprintf(buf, "%.8lg", _stack[_sp - i - 1]);
-            print(width - 8 * strlen(buf), y, buf, black, C437);
-            line(0, y - 1, width, y - 1, black);
+            PrintXY(width - 18 * strlen(buf), y, buf, 0, black);
+            
+        }
+        
+        line(0, RPN_INPUT - 2, 383, RPN_INPUT - 2, black);
+        for (int i = 0; i < 6; i++) {
+            line(0, RPN_STACK - 2 - 24 * i, 383, RPN_STACK - 2 - 24 * i, cyan);
         }
     }
 };
@@ -223,21 +238,21 @@ int g3a(void)
         Code keyCode = key::pressed();
         
         if (digit(keyCode)) {
-            if (cursor < strlen(input))
+            if (cursor < (int)strlen(input))
                 memmove(&input[cursor + 1], &input[cursor], strlen(input) + cursor);
             input[cursor++] = digit(keyCode);
         }
         
         if (keyCode == Dot) {
             if (!hasDecimalPoint(input, sizeof(input))) {
-                if (cursor < strlen(input))
+                if (cursor < (int)strlen(input))
                     memmove(&input[cursor + 1], &input[cursor], strlen(input) + cursor);
                 input[cursor++] = '.';
             }
         }
     
         if (keyCode == Left && cursor) cursor--;
-        if (keyCode == Right && cursor < strlen(input)) cursor++;
+        if (keyCode == Right && cursor < (int)strlen(input)) cursor++;
         
         if (keyCode == Del) {
             if (strlen(input)) {
@@ -260,8 +275,9 @@ int g3a(void)
         rpn.updateDisplay();
         
         if (strlen(input)) {
-            print(0, RPN_INPUT, input, black, C437);
-            line(cursor * 8, RPN_INPUT, cursor * 8, RPN_INPUT + 15, black);
+            PrintXY(0, RPN_INPUT, input, 0, black);
+            line(cursor * 18, RPN_INPUT, cursor * 18, RPN_INPUT + 23, black);
+            
         }
         
         updateDisplay();

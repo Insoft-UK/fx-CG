@@ -30,10 +30,10 @@ enum Code {
     Alpha = 77, Sq       = 67, Power  = 57, Exit  = 47, Down   = 37, Right = 27,
     XAngT = 76, Log      = 66, Ln     = 56, Sin   = 46, Cos    = 36, Tan   = 26,
     Abc   = 75, SwapDisp = 65, CubeRt = 55, InvX  = 45, Comma  = 35, Ans   = 25,
-    No7   = 74, No8      = 64, No9    = 54, Del   = 44, On     = 10,
-    No4   = 73, No5      = 63, No6    = 53, Mult  = 43, Div    = 33,
-    No1   = 72, No2      = 62, No3    = 52, Add   = 42, Minus  = 32,
-    No0   = 71, Dot      = 61, Exp    = 51, Neg   = 41, Return = 31, NONE  = 0
+    K7    = 74, K8       = 64, K9     = 54, Del   = 44, On     = 10,
+    K4    = 73, K5       = 63, K6     = 53, Mult  = 43, Div    = 33,
+    K1    = 72, K2       = 62, K3     = 52, Add   = 42, Minus  = 32,
+    K0    = 71, Dot      = 61, Exp    = 51, Neg   = 41, Return = 31, NONE  = 0
 };
 
 

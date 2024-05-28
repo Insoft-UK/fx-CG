@@ -11,6 +11,7 @@
 		13287EEA2C04D532005ACD74 /* key.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13287EE42C04D532005ACD74 /* key.cpp */; };
 		13287EEB2C04D532005ACD74 /* draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13287EE62C04D532005ACD74 /* draw.cpp */; };
 		13287EEC2C04D532005ACD74 /* fxCG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13287EE72C04D532005ACD74 /* fxCG.cpp */; };
+		13287EEF2C062559005ACD74 /* math.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13287EED2C062559005ACD74 /* math.cpp */; };
 		13919EA529A46B96008277AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13919EA429A46B96008277AA /* AppDelegate.swift */; };
 		13919EAB29A46B96008277AA /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13919EAA29A46B96008277AA /* GameScene.swift */; };
 		13919EAD29A46B96008277AA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13919EAC29A46B96008277AA /* ViewController.swift */; };
@@ -37,6 +38,8 @@
 		13287EE62C04D532005ACD74 /* draw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = draw.cpp; path = ../../Libraries/fxCG/draw.cpp; sourceTree = "<group>"; };
 		13287EE72C04D532005ACD74 /* fxCG.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fxCG.cpp; path = ../../Libraries/fxCG/fxCG.cpp; sourceTree = "<group>"; };
 		13287EE82C04D532005ACD74 /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = types.h; path = ../../Libraries/fxCG/types.h; sourceTree = "<group>"; };
+		13287EED2C062559005ACD74 /* math.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = math.cpp; path = ../../Libraries/fxCG/math.cpp; sourceTree = "<group>"; };
+		13287EEE2C062559005ACD74 /* math.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = math.hpp; path = ../../Libraries/fxCG/math.hpp; sourceTree = "<group>"; };
 		1328C28D2BC9E5FB003C4B3A /* GFXFont.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GFXFont.h; sourceTree = "<group>"; };
 		1328C2AE2BD0A06C003C4B3A /* fxCG50_10pt0xE5XX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_10pt0xE5XX.h; sourceTree = "<group>"; };
 		1328C2AF2BD0A06C003C4B3A /* fxCG50_18pt0x7FXX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_18pt0x7FXX.h; sourceTree = "<group>"; };
@@ -105,6 +108,8 @@
 				13287EE42C04D532005ACD74 /* key.cpp */,
 				13287EE32C04D532005ACD74 /* key.hpp */,
 				13287EE82C04D532005ACD74 /* types.h */,
+				13287EED2C062559005ACD74 /* math.cpp */,
+				13287EEE2C062559005ACD74 /* math.hpp */,
 			);
 			name = fxCG;
 			sourceTree = "<group>";
@@ -336,6 +341,7 @@
 				13AB070B29AD764800183128 /* file.cpp in Sources */,
 				13AB06FD29AA30EE00183128 /* display.c in Sources */,
 				13919EAD29A46B96008277AA /* ViewController.swift in Sources */,
+				13287EEF2C062559005ACD74 /* math.cpp in Sources */,
 				13AB070929AA7E0600183128 /* ShaderKitExtensions.swift in Sources */,
 				13AB06FB29AA2E3100183128 /* keyboard.c in Sources */,
 				13919EAB29A46B96008277AA /* GameScene.swift in Sources */,

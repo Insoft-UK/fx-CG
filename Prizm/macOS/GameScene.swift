@@ -72,7 +72,17 @@ class GameScene: SKScene {
     }
     
     override func keyDown(with event: NSEvent) {
+        let shift = event.modifierFlags == .shift;
+        
         switch event.keyCode {
+        case 1:
+            fxCG_KeyDown(46)
+        case 8:
+            fxCG_KeyDown(36)
+        case 17:
+            fxCG_KeyDown(26)
+        case 37:
+            fxCG_KeyDown(56)
         case 122:
             fxCG_KeyDown(KEY_PRGM_F1)
         case 120:
@@ -120,7 +130,11 @@ class GameScene: SKScene {
         case 47:
             fxCG_KeyDown(61)
         case 28:
-            fxCG_KeyDown(KEY_PRGM_8)
+            if shift == true {
+                fxCG_KeyDown(43)
+            } else {
+                fxCG_KeyDown(KEY_PRGM_8)
+            }
         case 25:
             fxCG_KeyDown(KEY_PRGM_9)
         case 124:
@@ -139,7 +153,17 @@ class GameScene: SKScene {
 
     
     override func keyUp(with event: NSEvent) {
+        let shift = event.modifierFlags == .shift;
+        
         switch event.keyCode {
+        case 1:
+            fxCG_KeyUp(46)
+        case 8:
+            fxCG_KeyUp(36)
+        case 17:
+            fxCG_KeyUp(26)
+        case 37:
+            fxCG_KeyUp(56)
         case 122:
             fxCG_KeyUp(KEY_PRGM_F1)
         case 120:
@@ -185,7 +209,11 @@ class GameScene: SKScene {
         case 27:
             fxCG_KeyUp(32)
         case 28:
-            fxCG_KeyUp(KEY_PRGM_8)
+            if shift == true {
+                fxCG_KeyUp(43)
+            } else {
+                fxCG_KeyUp(KEY_PRGM_8)
+            }
         case 25:
             fxCG_KeyUp(KEY_PRGM_9)
         case 47:
