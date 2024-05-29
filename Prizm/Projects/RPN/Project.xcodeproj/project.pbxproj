@@ -12,6 +12,8 @@
 		13287EEB2C04D532005ACD74 /* draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13287EE62C04D532005ACD74 /* draw.cpp */; };
 		13287EEC2C04D532005ACD74 /* fxCG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13287EE72C04D532005ACD74 /* fxCG.cpp */; };
 		13287EEF2C062559005ACD74 /* math.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13287EED2C062559005ACD74 /* math.cpp */; };
+		13287EF22C066778005ACD74 /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13287EF02C066778005ACD74 /* input.cpp */; };
+		13287EF42C066D5B005ACD74 /* rtc.c in Sources */ = {isa = PBXBuildFile; fileRef = 13287EF32C066D5B005ACD74 /* rtc.c */; };
 		13919EA529A46B96008277AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13919EA429A46B96008277AA /* AppDelegate.swift */; };
 		13919EAB29A46B96008277AA /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13919EAA29A46B96008277AA /* GameScene.swift */; };
 		13919EAD29A46B96008277AA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13919EAC29A46B96008277AA /* ViewController.swift */; };
@@ -40,6 +42,9 @@
 		13287EE82C04D532005ACD74 /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = types.h; path = ../../Libraries/fxCG/types.h; sourceTree = "<group>"; };
 		13287EED2C062559005ACD74 /* math.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = math.cpp; path = ../../Libraries/fxCG/math.cpp; sourceTree = "<group>"; };
 		13287EEE2C062559005ACD74 /* math.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = math.hpp; path = ../../Libraries/fxCG/math.hpp; sourceTree = "<group>"; };
+		13287EF02C066778005ACD74 /* input.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = input.cpp; path = ../../Libraries/fxCG/input.cpp; sourceTree = "<group>"; };
+		13287EF12C066778005ACD74 /* input.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = input.hpp; path = ../../Libraries/fxCG/input.hpp; sourceTree = "<group>"; };
+		13287EF32C066D5B005ACD74 /* rtc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = rtc.c; sourceTree = "<group>"; };
 		1328C28D2BC9E5FB003C4B3A /* GFXFont.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GFXFont.h; sourceTree = "<group>"; };
 		1328C2AE2BD0A06C003C4B3A /* fxCG50_10pt0xE5XX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_10pt0xE5XX.h; sourceTree = "<group>"; };
 		1328C2AF2BD0A06C003C4B3A /* fxCG50_18pt0x7FXX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fxCG50_18pt0x7FXX.h; sourceTree = "<group>"; };
@@ -110,6 +115,8 @@
 				13287EE82C04D532005ACD74 /* types.h */,
 				13287EED2C062559005ACD74 /* math.cpp */,
 				13287EEE2C062559005ACD74 /* math.hpp */,
+				13287EF02C066778005ACD74 /* input.cpp */,
+				13287EF12C066778005ACD74 /* input.hpp */,
 			);
 			name = fxCG;
 			sourceTree = "<group>";
@@ -196,6 +203,7 @@
 				13AB06FA29AA2E3100183128 /* keyboard.c */,
 				13AB06FC29AA30EE00183128 /* display.c */,
 				13AB070329AA3C5C00183128 /* system.c */,
+				13287EF32C066D5B005ACD74 /* rtc.c */,
 				13AB070A29AD764800183128 /* file.cpp */,
 			);
 			path = fxcg;
@@ -340,12 +348,14 @@
 			files = (
 				13AB070B29AD764800183128 /* file.cpp in Sources */,
 				13AB06FD29AA30EE00183128 /* display.c in Sources */,
+				13287EF22C066778005ACD74 /* input.cpp in Sources */,
 				13919EAD29A46B96008277AA /* ViewController.swift in Sources */,
 				13287EEF2C062559005ACD74 /* math.cpp in Sources */,
 				13AB070929AA7E0600183128 /* ShaderKitExtensions.swift in Sources */,
 				13AB06FB29AA2E3100183128 /* keyboard.c in Sources */,
 				13919EAB29A46B96008277AA /* GameScene.swift in Sources */,
 				13AB070229AA3C2A00183128 /* main.cpp in Sources */,
+				13287EF42C066D5B005ACD74 /* rtc.c in Sources */,
 				13AB06F729A9A2B000183128 /* fxCGDisplayNode.swift in Sources */,
 				13287EEC2C04D532005ACD74 /* fxCG.cpp in Sources */,
 				13287EE92C04D532005ACD74 /* font.cpp in Sources */,

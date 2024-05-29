@@ -25,6 +25,8 @@
 #include "fxCG/key.hpp"
 #include "fxCG/font.hpp"
 #include "fxCG/math.hpp"
+#include "fxCG/input.hpp"
+
 #include "C437.h"
 
 #include <stdlib.h>
@@ -40,7 +42,7 @@ using namespace draw;
 using namespace key;
 using namespace font;
 
-char digit(Code code)
+char digit(Keycode code)
 {
     switch (code) {
         case key::K0: return '0';
@@ -86,7 +88,7 @@ public:
         return _stack[_sp - 1];
     }
     
-    bool isOperator(key::Code code)
+    bool isOperator(key::Keycode code)
     {
         if (code == key::Div) return true;
         if (code == key::Mult) return true;
@@ -102,7 +104,7 @@ public:
         return false;
     }
     
-    char getOperator(key::Code code)
+    char getOperator(key::Keycode code)
     {
         if (code == key::Div) return '/';
         if (code == key::Mult) return '*';
@@ -143,7 +145,7 @@ public:
         }
     }
     
-    void performOperator(const key::Code code)
+    void performOperator(const key::Keycode code)
     {
         double a, b = 0;
         char op = getOperator(code);
@@ -173,13 +175,13 @@ public:
         char buf[300];
         int y = RPN_STACK;
         for (int i=0; i<_sp && i < 6; i++, y-=24) {
-            sprintf(buf, "%.8lg", _stack[_sp - i - 1]);
-            PrintXY(width - 18 * strlen(buf), y, buf, 0, black);
+            sprintf(buf, "  %.8lg", _stack[_sp - i - 1]);
+            PrintXY(width - 18 * strlen(buf), y, buf, TEXT_MODE_NORMAL, TEXT_COLOR_BLACK);
             
         }
         
         line(0, RPN_INPUT - 2, 383, RPN_INPUT - 2, black);
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 5; i++) {
             line(0, RPN_STACK - 2 - 24 * i, 383, RPN_STACK - 2 - 24 * i, cyan);
         }
     }
@@ -227,23 +229,25 @@ int g3a(void)
     
     char input[40] = "\0";
     int cursor = 0;
+    Keycode keycode;
     
     loop {
         key::update();
         fillArea(0, 22, 384, 172, white);
        
-        if (isPressed(Menu))
-            break;
+        keycode = key::pressed();
         
-        Code keyCode = key::pressed();
+        if (keycode == Menu)
+            return 0;
         
-        if (digit(keyCode)) {
+        
+        if (digit(keycode)) {
             if (cursor < (int)strlen(input))
                 memmove(&input[cursor + 1], &input[cursor], strlen(input) + cursor);
-            input[cursor++] = digit(keyCode);
+            input[cursor++] = digit(keycode);
         }
         
-        if (keyCode == Dot) {
+        if (keycode == Dot) {
             if (!hasDecimalPoint(input, sizeof(input))) {
                 if (cursor < (int)strlen(input))
                     memmove(&input[cursor + 1], &input[cursor], strlen(input) + cursor);
@@ -251,10 +255,10 @@ int g3a(void)
             }
         }
     
-        if (keyCode == Left && cursor) cursor--;
-        if (keyCode == Right && cursor < (int)strlen(input)) cursor++;
+        if (keycode == Left && cursor) cursor--;
+        if (keycode == Right && cursor < (int)strlen(input)) cursor++;
         
-        if (keyCode == Del) {
+        if (keycode == Del) {
             if (strlen(input)) {
                 if (cursor) cursor--;
                 memmove(&input[cursor], &input[cursor + 1], strlen(input) - cursor);
@@ -263,22 +267,29 @@ int g3a(void)
             }
         }
         
-        if (rpn.isOperator(keyCode) || keyCode == Return) {
+        if (rpn.isOperator(keycode) || keycode == Return) {
             if (strlen(input)) {
                 rpn.push(clearInput(input, 40));
                 cursor = 0;
             }
-            if (keyCode != Return)
-                rpn.performOperator(keyCode);
+            if (keycode != Return)
+                rpn.performOperator(keycode);
         }
         
         rpn.updateDisplay();
         
         if (strlen(input)) {
-            PrintXY(0, RPN_INPUT, input, 0, black);
+            PrintCXY(0, RPN_INPUT, input, TEXT_MODE_NORMAL, -1, black, white, 1, 0);
             line(cursor * 18, RPN_INPUT, cursor * 18, RPN_INPUT + 23, black);
-            
         }
+        
+//        input::drawCursor(cursor * 18, RPN_INPUT, true, true, NULL);
+        
+        keycode = key::held();
+        char output[40];
+        sprintf(output, "%d", keycode);
+        
+        PrintCXY(0, 0, output, TEXT_MODE_NORMAL, -1, black, white, 1, 0);
         
         updateDisplay();
         wait(40);

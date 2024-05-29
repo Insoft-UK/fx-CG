@@ -1,5 +1,5 @@
 /*
- Copyright © 2023 Insoft. All rights reserved.
+ Copyright © 2024 Insoft. All rights reserved.
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -20,56 +20,30 @@
  THE SOFTWARE.
  */
 
+#include "fxcg/rtc.h"
 
-#include <unistd.h>
-
-#include "fxcg/keyboard.h"
-#include "fxcg/display.h"
-
-// MARK: - macOS Keyboard Simulator Functions
-
-static int keyPressed(void)
+int RTC_Reset( int r )
 {
-    extern uint16_t _fxCG_0xA44B0000[5];
+    return 0;
+}
+
+void RTC_SetDateTime( unsigned char*timestr )
+{
+
+}
+
+//Get information from/based on the RTC:
+void RTC_GetTime( unsigned int*hour, unsigned int*minute, unsigned int*second, unsigned int*millisecond )
+{
     
-    uint8_t *pressed = (uint8_t *)_fxCG_0xA44B0000;
-    int row;
-    for (row = 0; row <= 9; row++) {
-        if (*pressed) {
-            // Key pressed ?
-            for (int col=0; col<=7; col++) {
-                if (*pressed & (1 << col)) {
-                    return ((col + 1) * 10 + row);
-                }
-            }
-            return 0;
-        }
-        pressed++;
-    }
-    return 0;
 }
 
-int GetKey( int *key )
+int RTC_GetTicks(void)
 {
-    Bdisp_PutDisp_DD();
-    DisplayStatusArea();
-    
-    while (1)
-    {
-//        if (_fxCG_0xA44B0000 != KEY_CTRL_NOP)
-//        {
-//            
-//            _fxCG_0xA44B0000 = KEY_CTRL_NOP;
-//            break;
-//        }
-        usleep(1000);
-    }
     return 0;
 }
 
-int GetKeyWait_OS(int*column, int*row, int type_of_waiting, int timeout_period, int menu, unsigned short*keycode )
+int RTC_Elapsed_ms( int start_value, int duration_in_ms )
 {
-    *keycode = keyPressed();
     return 0;
 }
-

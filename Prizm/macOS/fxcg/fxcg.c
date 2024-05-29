@@ -50,6 +50,7 @@ void fxCG_KeyDown(int keyCode) {
     
     int word = row >> 1;
     int bit = col + 8 * ( row & 1 );
+    
     _fxCG_0xA44B0000[word] |= 1 << bit;
 }
 
@@ -59,6 +60,7 @@ void fxCG_KeyUp(int keyCode) {
     
     int word = row >> 1;
     int bit = col + 8 * ( row & 1 );
+    
     _fxCG_0xA44B0000[word] &= ~(1 << bit);
 }
 

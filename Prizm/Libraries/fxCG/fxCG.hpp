@@ -96,6 +96,12 @@ void clearDisplay(color_t color);
 color_t color(uint8_t r, uint8_t g, uint8_t b);
 
 /**
+ @brief    Returns a color in RGB 565 format based on a gray value.
+ @param    shade  Shade which can be between 0 (black) and 31 (white)
+ */
+color_t gray(int shade);
+
+/**
  @brief    Change the speed of the operating PLL circuit.
  
  Notes: PLEASE before handling MENU keypresses in your add-in, use PLL_16x to go back to normal operating speed, at the courtesy of other applications and the OS. Feeding a value not defined below (AKA, an invalid value), will cause a crash.

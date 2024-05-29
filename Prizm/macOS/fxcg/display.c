@@ -363,6 +363,7 @@ void Bdisp_MMPrint(int x, int y, char* s, int mode, int xmax, int P6, int P7, in
 
 void PrintCXY( int x, int y, const char *text, int mode, int P5, int color, int bgcolor, int P8, int P9 )
 {
+    y += 24;
     if (mode & FXCGTextModeInvert) {
         uint16_t tmp = color;
         color = bgcolor;
@@ -378,7 +379,7 @@ void PrintCXY( int x, int y, const char *text, int mode, int P5, int color, int 
 
 void PrintXY( int x, int y, const char *string, int mode, int color ) {
     
-    PrintCXY(x, y, string, mode, 0, color, Bdisp_GetPoint_VRAM(x, y), 0, 0);
+    PrintCXY(x, y, string + 2, mode, 0, color, Bdisp_GetPoint_VRAM(x, y), 0, 0);
 }
 
 

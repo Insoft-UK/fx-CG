@@ -23,8 +23,10 @@
 #ifndef key_hpp
 #define key_hpp
 
+#include <stdint.h>
+
 namespace fxCG::key {
-enum Code {
+enum Keycode {
     F1    = 79, F2       = 69, F3     = 59, F4    = 49, F5     = 39, F6    = 29,
     Shift = 78, Optn     = 68, Vars   = 58, Menu  = 48, Left   = 38, Up    = 28,
     Alpha = 77, Sq       = 67, Power  = 57, Exit  = 47, Down   = 37, Right = 27,
@@ -36,6 +38,7 @@ enum Code {
     K0    = 71, Dot      = 61, Exp    = 51, Neg   = 41, Return = 31, NONE  = 0
 };
 
+uint16_t* reg(void);
 
 /**
  @brief    Reset key states.
@@ -48,35 +51,42 @@ void reset(void);
 void update(void);
 
 /**
+ @brief    Returns key code of key that is being held down.
+ 
+ keyUpdate required before using this function.
+ */
+key::Keycode held(void);
+
+/**
  @brief    Returns key code of key that has been pressed down.
  
  keyUpdate required before using this function.
  */
-Code pressed(void);
+Keycode pressed(void);
 
 /**
  @brief    Returns true if key has is being held down.
- @param    keyCode  The fx-CGxx key code.
+ @param    keycode  The fx-CGxx key code.
  
  keyUpdate not required.
  */
-bool isHeld(Code keyCode);
+bool isHeld(Keycode keycode);
 
 /**
  @brief    Returns true if key has just been pressed.
- @param    keyCode  The fx-CGxx key code.
+ @param    keycode  The fx-CGxx key code.
  
  keyUpdate required before using this function.
  */
-bool isPressed(Code keyCode);
+bool isPressed(Keycode keycode);
 
 /**
  @brief    Returns true if key has just been released
- @param    keyCode  The fx-CGxx key code.
+ @param    keycode  The fx-CGxx key code.
  
  keyUpdate required before using this function.
  */
-bool isReleased(Code keyCode);
+bool isReleased(Keycode keycode);
 }
 
 #endif /* key_hpp */

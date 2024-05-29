@@ -51,6 +51,11 @@ color_t fxCG::color(uint8_t r, uint8_t g, uint8_t b)
     return color;
 }
 
+color_t fxCG::gray(int shade)
+{
+    return  shade * 0x0841;
+}
+
 void fxCG::changeFreq(int mult)
 {
 #ifndef __clang__

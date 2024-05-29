@@ -39,11 +39,11 @@
      |                                                                                   |
      |   [SHIFT]   [OPTN]    [VARS]    [MENU]    [LEFT]    [ UP ]                        | 8 = (4)
      |                                                                                   |
-     |   [ALPHA]   [X^2]     [x√]      [EXIT]    [DOWN]    [RIGHT]                       | 7 = (3)
+     |   [ALPHA]   [x^2]     [x√]      [EXIT]    [DOWN]    [RIGHT]                       | 7 = (3)
      |                                                                                   |
-     |   [X,T,θ,n] [LOG]     [LN]      [SIN]     [COS]     [TAN]                         | 6 = (3)
+     |   [X,T,θ]   [log]     [ln]      [sin]     [cos]     [tan]                         | 6 = (3)
      |                                                                                   |
-     |   [abc]     [S<>D]    [(]       [)]       [,]       [-->]                         | 5 = (2)
+     |   [abc]     [S<>D]    [(]       [)]       [,]       [->]                          | 5 = (2)
      |                                                                                   |
      |   [7]       [8]       [9]       [DEL]                                             | 4 = (2)
      |                                                                                   |
@@ -51,7 +51,7 @@
      |                                                                                   |
      |   [1]       [2]       [3]       [+]       [-]                                     | 2 = (1)
      |                                                                                   |
-     |   [0]       [.]       [PI]      [(-)]     [EXE]                                   | 1 = (0)
+     |   [0]       [.]       [EXP]     [(-)]     [EXE]                                   | 1 = (0)
      |                                                                                   |
      |                                                               [AC/ON]             | 0 = (0)
      +----------------------------------------------------------------------------------+
@@ -75,7 +75,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
@@ -96,6 +95,10 @@ static struct {
     {0,0,0,0,0}
 };
 
+uint16_t* key::reg(void)
+{
+    return (uint16_t *)FXCG50_KEY_REG;
+}
 
 void key::update(void)
 {
@@ -119,55 +122,62 @@ void key::reset(void)
     }
 }
 
-key::Code key::pressed(void)
+static key::Keycode keycode(const uint16_t* reg)
 {
-    uint8_t *pressed = (uint8_t *)_key.pressed;
-    int row;
-    for (row = 0; row <= 9; row++) {
-        if (*pressed) {
-            // Key pressed ?
-            for (int col=0; col<=7; col++) {
-                if (*pressed & (1 << col)) {
-                    return (Code)((col + 1) * 10 + row);
-                }
-            }
-            return NONE;
+    for (int row = 0; row < 9; row++) {
+        int word = row >> 1;
+        if (!reg[word]) continue;
+        
+        for (int col = 0; col < 8; col++) {
+            int bit = col + 8 * ( row & 1 );
+            if (reg[word] & (1 << bit))
+                return (key::Keycode)((col + 1) * 10 + row);
         }
-        pressed++;
     }
-    return NONE;
+
+    return key::NONE;
+}
+
+key::Keycode key::held(void)
+{
+    return keycode(_key.held);
+}
+
+key::Keycode key::pressed(void)
+{
+    return keycode(_key.pressed);
 }
 
 /**
  @brief    Returns true if key has is being hold down.
- @param    keyCode  The fx-CGxx key code.
+ @param    keycode  The fx-CGxx key code.
  @param    data The status data of the keyboard.
  */
-static bool fxIsKeyHold(key::Code keyCode, const uint16_t *data)
+static bool fxIsKeyHold(key::Keycode keycode, const uint16_t *data)
 {
-    int row = keyCode % 10;
-    int col = keyCode / 10 - 1;
+    int row = keycode % 10;
+    int col = keycode / 10 - 1;
     
     int word = row >> 1;
-    int bit = col + ((row & 1) << 3);
+    int bit = col + 8 * ( row & 1 );
     
-    return (0 != (data[word] & 1<<bit));
+    return (0 != (data[word] & 1 << bit));
 }
 
 
-bool key::isHeld(key::Code keyCode)
+bool key::isHeld(key::Keycode keycode)
 {
-    return fxIsKeyHold(keyCode, _keyboardRegister);
+    return fxIsKeyHold(keycode, _keyboardRegister);
 }
 
 
-bool key::isPressed(key::Code keyCode)
+bool key::isPressed(key::Keycode keycode)
 {
-    return fxIsKeyHold(keyCode, _key.pressed);
+    return fxIsKeyHold(keycode, _key.pressed);
 }
 
 
-bool key::isReleased(key::Code keyCode)
+bool key::isReleased(key::Keycode keycode)
 {
-    return fxIsKeyHold(keyCode, _key.released);
+    return fxIsKeyHold(keycode, _key.released);
 }
