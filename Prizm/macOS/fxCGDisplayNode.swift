@@ -53,9 +53,12 @@ class fxCGDisplayNode: SKSpriteNode {
         isUserInteractionEnabled = false
         
         mutableTexture = SKMutableTexture(size: CGSize(width: 396, height: 224))
+        mutableTexture.filteringMode = .nearest
         texture = mutableTexture
         blendMode = .replace
         zPosition = 1
+    
+        
         
         
         Bdisp_Fill_VRAM(Int32(0xffff), 3)

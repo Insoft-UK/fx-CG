@@ -40,6 +40,8 @@ enum Keycode {
 
 uint16_t* reg(void);
 
+typedef uint8_t keycode_t;
+
 /**
  @brief    Reset key states.
  */

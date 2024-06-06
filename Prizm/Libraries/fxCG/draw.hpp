@@ -25,7 +25,20 @@
 
 #include "types.h"
 
+#define SCREEN_WIDTH 384
+#define SCREEN_HEIGHT 216
+
 namespace fxCG::draw {
+
+/**
+ @brief    Enables the drawing at half the opacity
+ */
+void enableHalfOpacityDrawing();
+
+/**
+ @brief    Disables the drawing at half the opacity
+ */
+void disableHalfOpacityDrawing();
 
 /**
  @brief    Write a line.  Bresenham's algorithm
@@ -130,17 +143,17 @@ void fillArea(unsigned x, unsigned y, unsigned w, unsigned h, color_t color);
 void pixel(int x, int y, uint16_t color);
 
 /**
- @brief    Draw a 16-bit sprite/image to the VRAM buffer.
+ @brief    Draw a 16-bit image to the VRAM buffer.
  @param    data Pointer to sprite data.
  @param    x   X-coordinate of top-left of sprite.
  @param    y   Y-coordinate of top-left of sprite.
  @param    w   Width of sprite, in pixels.
  @param    h   Height of sprite, in pixels.
  */
-void sprite(uint16_t *data, int x, int y, int w, int h);
+void image(uint16_t *data, int x, int y, int w, int h);
 
 /**
- @brief    Draw a 16-bit sprite/image to the VRAM buffer.
+ @brief    Draw a 16-bit image to the VRAM buffer.
  @param    data Pointer to sprite data.
  @param    x   X-coordinate of top-left of sprite.
  @param    y   Y-coordinate of top-left of sprite.
@@ -148,10 +161,10 @@ void sprite(uint16_t *data, int x, int y, int w, int h);
  @param    h   Height of sprite, in pixels.
  @param    maskColor Color that should be treated as transparent.
  */
-void spriteMaskedAlpha(uint16_t *data, int x, int y, int w, int h, color_t maskColor, int alpha);
+void imageMaskedAlpha(uint16_t *data, int x, int y, int w, int h, color_t maskColor, int alpha);
 
 /**
- @brief    Draw an N-bit (for N=8, 2, or 1) sprite/image to the VRAM buffer.
+ @brief    Draw an N-bit (for N=8, 2, or 1) image to the VRAM buffer.
  @param    data Pointer to sprite data.
  @param    x   X-coordinate of top-left of sprite.
  @param    y   Y-coordinate of top-left of sprite.
@@ -160,11 +173,11 @@ void spriteMaskedAlpha(uint16_t *data, int x, int y, int w, int h, color_t maskC
  @param    palette A palette.
  @param    bitWidth The bit-width. This is designed for 8-, 2-, and 1-bit images.
  */
-void spriteNbit(const uint8_t *data, int x, int y, int w, int h, color_t *palette, unsigned int bitWidth);
+void imageNbit(const uint8_t *data, int x, int y, int w, int h, color_t *palette, unsigned int bitWidth);
 
 /**
- @brief    Draw an N-bit (for N=8, 2, or 1) sprite/image to the VRAM buffer, treating one color as transparent.
- @param    data Pointer to sprite data.
+ @brief    Draw an N-bit (for N=8, 4, 2, or 1) image to the VRAM buffer, treating one color as transparent.
+ @param    data Pointer to image data.
  @param    x   X-coordinate of top-left of sprite.
  @param    y   Y-coordinate of top-left of sprite.
  @param    w   Width of sprite, in pixels.
@@ -173,7 +186,7 @@ void spriteNbit(const uint8_t *data, int x, int y, int w, int h, color_t *palett
  @param    maskColor Color that should be treated as transparent.
  @param    bitWidth The bit-width. This is designed for 8-, 2-, and 1-bit images.
  */
-void spriteNbitMasked(const uint8_t *data, int x, int y, int w, int h, const color_t *palette, color_t maskColor, unsigned int bitWidth);
+void imageNbitMasked(const uint8_t *data, int x, int y, int w, int h, const color_t *palette, color_t maskColor, unsigned int bitWidth);
 
 };
 

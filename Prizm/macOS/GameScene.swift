@@ -72,7 +72,12 @@ class GameScene: SKScene {
     }
     
     override func keyDown(with event: NSEvent) {
-        let shift = event.modifierFlags == .shift;
+        
+        if event.modifierFlags.contains(.capsLock) {
+            _fxCG_KMI_Shift = true
+        } else {
+            _fxCG_KMI_Shift = false
+        }
         
         switch event.keyCode {
         case 1:
@@ -127,14 +132,12 @@ class GameScene: SKScene {
             fxCG_KeyDown(32)
         case 26:
             fxCG_KeyDown(KEY_PRGM_7)
+        case 45:
+            fxCG_KeyDown(41)
         case 47:
             fxCG_KeyDown(61)
         case 28:
-            if shift == true {
-                fxCG_KeyDown(43)
-            } else {
-                fxCG_KeyDown(KEY_PRGM_8)
-            }
+            fxCG_KeyDown(KEY_PRGM_8)
         case 25:
             fxCG_KeyDown(KEY_PRGM_9)
         case 124:
@@ -216,6 +219,8 @@ class GameScene: SKScene {
             }
         case 25:
             fxCG_KeyUp(KEY_PRGM_9)
+        case 45:
+            fxCG_KeyUp(41)
         case 47:
             fxCG_KeyUp(61)
         case 124:

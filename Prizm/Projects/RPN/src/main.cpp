@@ -26,8 +26,10 @@
 #include "fxCG/font.hpp"
 #include "fxCG/math.hpp"
 #include "fxCG/input.hpp"
+#include "fxCG/ui.hpp"
 
 #include "C437.h"
+#include "common.hpp"
 
 #include <stdlib.h>
 
@@ -41,6 +43,14 @@ using namespace fxCG;
 using namespace draw;
 using namespace key;
 using namespace font;
+
+#include <stdio.h>
+#include <math.h>
+
+
+
+
+
 
 char digit(Keycode code)
 {
@@ -62,6 +72,8 @@ char digit(Keycode code)
 }
 
 
+
+
 class RPN {
 private:
     double _stack[100];
@@ -69,6 +81,10 @@ private:
     
 public:
 
+    int size(void)
+    {
+        return _sp;
+    }
     
     void push(const double value)
     {
@@ -76,142 +92,265 @@ public:
         _stack[_sp++] = value;
     }
     
-    void pop(void)
+    double pop(void)
     {
-        if (!_sp) return;
-        _sp--;
+        if (!_sp) return NAN;
+        return _stack[--_sp];
     }
     
     double top(void)
     {
-        if (!_sp) return 0;
+        if (!_sp) return NAN;
         return _stack[_sp - 1];
     }
     
-    bool isOperator(key::Keycode code)
-    {
-        if (code == key::Div) return true;
-        if (code == key::Mult) return true;
-        if (code == key::Minus) return true;
-        if (code == key::Add) return true;
-        if (code == key::Sq) return true;
-        if (code == key::Sin) return true;
-        if (code == key::Cos) return true;
-        if (code == key::Tan) return true;
-        if (code == key::Log) return true;
-        if (code == key::Ln) return true;
-        if (code == key::Power) return true;
-        return false;
-    }
     
-    char getOperator(key::Keycode code)
+    
+    char getOperator(const int key)
     {
-        if (code == key::Div) return '/';
-        if (code == key::Mult) return '*';
-        if (code == key::Minus) return '-';
-        if (code == key::Add) return '+';
-        if (code == key::Sq) return 'S';
-        if (code == key::Sin) return 's';
-        if (code == key::Cos) return 'c';
-        if (code == key::Tan) return 't';
-        if (code == key::Log) return 'l';
-        if (code == key::Ln) return 'n';
-        if (code == key::Power) return '^';
+        if (key == KEY_CHAR_DIV) return '/';
+        if (key == KEY_CHAR_MULT) return '*';
+        if (key == KEY_CHAR_MINUS) return '-';
+        if (key == KEY_CHAR_PLUS) return '+';
+        if (key == KEY_CHAR_SQUARE) return 'S';
+        if (key == KEY_CHAR_SIN) return 's';
+        if (key == KEY_CHAR_COS) return 'c';
+        if (key == KEY_CHAR_TAN) return 't';
+        if (key == KEY_CHAR_LOG) return 'l';
+        if (key == KEY_CHAR_LN) return 'n';
+        if (key == KEY_CHAR_POW) return '^';
         
         return '\0';
     }
     
-    double applyOperator(const double a, const double b, const char op)
+    int sin(void)
     {
+        double x;
+        if (_sp < 1) return 1;
+        x = pop();
+        push(math::sin(x));
+        return 0;
+    }
+    
+    int cos(void)
+    {
+        double x;
+        if (_sp < 1) return 1;
+        x = pop();
+        push(math::cos(x));
+        return 0;
+    }
+    
+    int tan(void)
+    {
+        double x;
+        if (_sp < 1) return 1;
+        x = pop();
+        push(math::tan(x));
+        return 0;
+    }
+    
+    int log(void)
+    {
+        double x;
+        if (_sp < 1) return 1;
+        x = pop();
+        push(math::log10(x));
+        return 0;
+    }
+    
+    int ln(void)
+    {
+        double x;
+        if (_sp < 1) return 1;
+        x = pop();
+        push(math::log(x));
+        return 0;
+    }
+    
+    int square(void)
+    {
+        double x;
+        if (_sp < 1) return 1;
+        x = pop();
+        push(x);
+        return 0;
+    }
+    
+    int operation(const char op)
+    {
+        double x, y = 0;
+        if (_sp < 2) return 1;
+        
+        y = pop();
+        x = pop();
+        
         switch (op) {
             case '/':
-                if (b == 0) return NAN;
-                return a / b;
+                if (y == 0) return 1;
+                push(x / y);
+                return 0;
                 
-            case '*': return a * b;
-            case '-': return a - b;
-            case '+': return a + b;
-            case '%': return math::fmod(a, b);
-            case '^': return math::pow(a, b);
-            case 's': return math::sin(a);
-            case 'c': return math::cos(a);
-            case 't': return math::tan(a);
-            case 'l': return math::log10(a);
-            case 'n': return math::log(a);
-            case 'S': return a * a;
+            case '*':
+                push(x * y);
+                return 0;
+                
+            case '-':
+                push(x - y);
+                return 0;
+                
+            case '+':
+                push(x + y);
+                return 0;
+                
+            case '^':
+                push(math::pow(x, y));
+                return 0;
                 
             default:
-                return 0;
+                return 1;
         }
     }
     
-    void performOperator(const key::Keycode code)
+    int inputLine(char *buf, size_t length)
     {
-        double a, b = 0;
-        char op = getOperator(code);
+        short cursor = 0;
+        int col = 0, row = 0;
+        unsigned short key = 0, last_key = 0;
+        keycode_t keycode = 0;
+        bool shift = false;
         
-        switch (op) {
-            case '/':
-            case '*':
-            case '-':
-            case '+':
-            case '^':
-            case '%':
-                if (!_sp) return;
-                b = top(); _sp--;
-                break;
-        }
+        uint8_t map[42] = {
+             0 ,  0 ,  0 ,  0 ,  0 ,  0 ,
+             0 ,  0 ,  0 ,  0 ,  0 ,  0 ,
+             0 ,  0 ,  0 ,  0 ,  0 ,  0 ,
+            '7', '8', '9',  0 ,  0 ,  0 ,
+            '4', '5', '6',  0 ,  0 ,  0 ,
+            '1', '2', '3',  0 ,  0 ,  0 ,
+            '0', '.',  0 ,  0 ,  0 ,  0
+        };
         
-        if (!_sp) return;
-        a = top(); _sp--;
+        memset(buf, 0, length);
         
-        double result = applyOperator(a, b, op);
-        push(result);
+        do {
+            int x = cursor * 18;
+            int y = RPN_INPUT;
+            fillArea(x, y, LCD_WIDTH_PX - x, 24, 0xFFFF);
+            if (*buf)
+                PrintCXY(0, y - 24, buf, TEXT_MODE_NORMAL, -1, black, white, 1, 0);
+            else
+                PrintCXY(0, y - 24, "\xD8", TEXT_MODE_NORMAL, -1, black, white, 1, 0);
+            fillArea(x, y, 3, 22, 0);
+            
+            Bdisp_PutDisp_DD();
+            
+            int retval = GetKeyWait_OS(&col, &row, KEYWAIT_HALTON_TIMERON, 1, 0, &key);
+            
+            if (retval == KEYREP_KEYEVENT) {
+                keycode = 0;
+                
+                if (key != last_key)
+                    keycode = (10 * col) + (row - 1);
+                  
+            } else key = 0;
+            
+            last_key = key;
+            
+            if (keycode) {
+                switch (keycode) {
+                    case KEY_PRGM_DEL:
+                        if (!cursor) {
+                            pop();
+                            refresh();
+                            break;
+                        }
+                        cursor--;
+                        memmove(&buf[cursor], &buf[cursor + 1], strlen(buf) - cursor);
+                        shift = false;
+                        break;
+                        
+                    case KEY_PRGM_LEFT:
+                        if (--cursor < 0) cursor = strlen(buf);
+                        shift = false;
+                        break;
+                        
+                    case KEY_PRGM_RIGHT:
+                        if (++cursor > strlen(buf)) cursor = 0;
+                        shift = false;
+                        break;
+                        
+                    case KEY_PRGM_SHIFT:
+                        shift = !shift;
+                        break;
+                        
+                    case 43: return KEY_CHAR_MULT;
+                    case 42: return KEY_CHAR_PLUS;
+                    case 33: return KEY_CHAR_DIV;
+                    case 32: return KEY_CHAR_MINUS;
+//                    case 46: return KEY_CHAR_SIN;
+//                    case 36: return KEY_CHAR_COS;
+//                    case 26: return KEY_CHAR_TAN;
+//                    case 56: return KEY_CHAR_LN;
+//                    case 66: return KEY_CHAR_LOG;
+                    case 67: return shift ? KEY_CHAR_ROOT : KEY_CHAR_SQUARE;
+//                    case 57: return KEY_CHAR_POW;
+                        
+                    case 41:
+                        if (*buf == '\x87') {
+                            memmove(buf, &buf[1], strlen(buf));
+                            cursor--;
+                        } else {
+                            memmove(buf + 1, buf, strlen(buf));
+                            *buf = '\x87';
+                            cursor++;
+                        }
+                        shift = false;
+                        break;
+                        
+                    default: {
+                        int i = (7 - (row - 2)) * 6 + 6 - (col - 2) - 6 - 1;
+                        uint8_t ascii = map[i];
+                        if (ascii == '.' && strchr(buf, '.')) break;
+                        if (ascii >= ' ' && ascii <= '~' && cursor < 18) strinc(buf, ascii, cursor++, length);
+                    }
+                        shift = false;
+                        break;
+                }
+            }
+        } while (keycode != KEY_PRGM_RETURN);
+        if (*buf == '\x87') *buf='-';
+        return 0;
     }
     
-    
-    void updateDisplay(void)
+    void refresh(void)
     {
-        char buf[300];
+        fillArea(0, 24, 384, 172, white);
+        
+        char str[50];
         int y = RPN_STACK;
         for (int i=0; i<_sp && i < 6; i++, y-=24) {
-            sprintf(buf, "  %.8lg", _stack[_sp - i - 1]);
-            PrintXY(width - 18 * strlen(buf), y, buf, TEXT_MODE_NORMAL, TEXT_COLOR_BLACK);
+            dtostr(_stack[_sp - i - 1], str, 6);
+            PrintCXY(width - 18 * (int)strlen(str) - 0, y - 24, str, TEXT_MODE_NORMAL, -1, black, white, 1, 0);
             
         }
-        
-        line(0, RPN_INPUT - 2, 383, RPN_INPUT - 2, black);
+        line(0, 22, 383, 22, 0);
+        line(0, RPN_INPUT - 2, 383, RPN_INPUT - 2, gray(24));
         for (int i = 0; i < 5; i++) {
-            line(0, RPN_STACK - 2 - 24 * i, 383, RPN_STACK - 2 - 24 * i, cyan);
+            line(0, RPN_STACK - 2 - 24 * i, 383 - 0, RPN_STACK - 2 - 24 * i, cyan);
         }
+        
+        Bdisp_PutDisp_DD();
     }
 };
 
-RPN rpn;
 
-double clearInput(char *str, const size_t length)
-{
-    double ret;
-    char *ptr;
-    
-    ret = strtod(str, &ptr);
-    
-    memset(str, 0, length);
-    return ret;
-}
 
-bool hasDecimalPoint(const char *str, size_t length)
-{
-    while (length--) {
-        if (str[length - 1] == '.') return true;
-    }
-    return false;
-}
 
 void quitHandler(void)
 {
-    FrameColor(FXCGFrameModeSetToColor, white);
+    FrameColor(FrameModeSetToColor, white);
     DrawFrame(white);
+    fxCG::disableFullColorMode();
 }
 
 // MARK: - CASIO fxCG Add-In Application "main" Function
@@ -219,82 +358,44 @@ int g3a(void)
 {
     SetQuitHandler(quitHandler);
     
-    FrameColor(FXCGFrameModeSetToColor, white);
+    FrameColor(FrameModeSetToColor, white);
     DrawFrame(white);
     
     /// Switches the screen to full color mode (16 bits per pixel, RGB565)
-    fxCG::enableColor();
-//    fxCG::clearDisplay(black);
+    fxCG::enableFullColorMode();
     
     
-    char input[40] = "\0";
+    char input[20] = "\0";
     int cursor = 0;
-    Keycode keycode;
+    
+    char color = TEXT_COLOR_WHITE;
+    DefineStatusAreaFlags(3, SAF_BATTERY | SAF_TEXT | SAF_GLYPH | SAF_ALPHA_SHIFT, &color, &color);
+    EnableStatusArea(0);
+    
+    RPN rpn;
+    rpn.refresh();
     
     loop {
-        key::update();
-        fillArea(0, 22, 384, 172, white);
-       
-        keycode = key::pressed();
-        
-        if (keycode == Menu)
-            return 0;
-        
-        
-        if (digit(keycode)) {
-            if (cursor < (int)strlen(input))
-                memmove(&input[cursor + 1], &input[cursor], strlen(input) + cursor);
-            input[cursor++] = digit(keycode);
-        }
-        
-        if (keycode == Dot) {
-            if (!hasDecimalPoint(input, sizeof(input))) {
-                if (cursor < (int)strlen(input))
-                    memmove(&input[cursor + 1], &input[cursor], strlen(input) + cursor);
-                input[cursor++] = '.';
-            }
-        }
+        int key = rpn.inputLine(input, sizeof(input));
     
-        if (keycode == Left && cursor) cursor--;
-        if (keycode == Right && cursor < (int)strlen(input)) cursor++;
+        if (strlen(input))
+            rpn.push(atof(input));
         
-        if (keycode == Del) {
-            if (strlen(input)) {
-                if (cursor) cursor--;
-                memmove(&input[cursor], &input[cursor + 1], strlen(input) - cursor);
-            } else {
-                rpn.pop();
-            }
-        }
+        if (key == KEY_CHAR_MULT) rpn.operation('*');
+        if (key == KEY_CHAR_DIV) rpn.operation('/');
+        if (key == KEY_CHAR_MINUS) rpn.operation('-');
+        if (key == KEY_CHAR_PLUS) rpn.operation('+');
+        if (key == KEY_CHAR_POW) rpn.operation('^');
+        if (key == KEY_CHAR_SQUARE) rpn.square();
+//        if (key == KEY_CHAR_SIN) rpn.sin();
+//        if (key == KEY_CHAR_COS) rpn.cos();
+//        if (key == KEY_CHAR_TAN) rpn.tan();
+//        if (key == KEY_CHAR_LOG) rpn.log();
+//        if (key == KEY_CHAR_LN) rpn.ln();
         
-        if (rpn.isOperator(keycode) || keycode == Return) {
-            if (strlen(input)) {
-                rpn.push(clearInput(input, 40));
-                cursor = 0;
-            }
-            if (keycode != Return)
-                rpn.performOperator(keycode);
-        }
-        
-        rpn.updateDisplay();
-        
-        if (strlen(input)) {
-            PrintCXY(0, RPN_INPUT, input, TEXT_MODE_NORMAL, -1, black, white, 1, 0);
-            line(cursor * 18, RPN_INPUT, cursor * 18, RPN_INPUT + 23, black);
-        }
-        
-//        input::drawCursor(cursor * 18, RPN_INPUT, true, true, NULL);
-        
-        keycode = key::held();
-        char output[40];
-        sprintf(output, "%d", keycode);
-        
-        PrintCXY(0, 0, output, TEXT_MODE_NORMAL, -1, black, white, 1, 0);
-        
-        updateDisplay();
-        wait(40);
+        rpn.refresh();
+        GetKey(&key);
     }
-    
     
     return 0;
 }

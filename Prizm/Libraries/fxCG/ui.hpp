@@ -20,21 +20,22 @@
  THE SOFTWARE.
  */
 
-#ifndef input_hpp
-#define input_hpp
+#ifndef ui_hpp
+#define ui_hpp
 
 #include "types.h"
 
-#define INPUT_MODE_TEXT 0
-#define INPUT_MODE_FLOAT 1
-#define INPUT_MODE_INT 2
-#define INPUT_MODE_POSINT 3
-
-#define CURSOR_FLASH_RATE 32
-
-namespace fxCG::input {
-void drawCursor(int x, int y, int mode);
-int getLine(char* buf, int maxstrlen, int x, int y, int maxdisplen, unsigned short inmode);
+namespace fxCG::ui {
+typedef struct {
+    uint32_t min;       // Minimum of the indicator
+    uint32_t max;       // Maximum logical indicator range
+    uint32_t position;  // Indicator position
+    uint16_t x;         // left position of the bar in pixels
+    uint16_t y;         // top position of the bar in pixels
+    uint16_t length;    // Length of the scroll bar
+    
+} TScrollBar;
+void scrollBar(TScrollBar *scrollBar);
 }
 
-#endif /* input_hpp */
+#endif /* ui_hpp */

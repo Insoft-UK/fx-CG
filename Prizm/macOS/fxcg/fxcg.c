@@ -22,12 +22,22 @@
 
 #include "fxcg.h"
 
+#include "Alpha.h"
+#include "Shift.h"
+#include "Battery.h"
+
+
+uint16_t _fxCG_SAF = SAF_BATTERY | SAF_ALPHA_SHIFT;
+bool _fxCG_KMI_Shift = false;
+bool _fxCG_KMI_Alpha = false;
+bool _fxCG_KMI_Clip = false;
+
 FXCG_DDRegister _fxCG_DDRegister = {
     .B = 1 /// 1 = Enable 8 color mode
 };
 
 uint16_t _fxCG_0xFD801460 = 0xFFFF;
-uint16_t _fxCG_0xA44B0000[5] = {0,0,0,0,0}; // keyboard_register
+uint16_t _fxCG_0xA44B0000[6] = {0,0,0,0,0,0}; // keyboard_register
 
 // DRAM is RGB565 regardless of VRAM RGB565 or RGB111
 uint16_t _fxCG_DRAM[ 396 * 224 ];
@@ -106,6 +116,32 @@ static uint32_t fxCG_ConvertHighColorToTrueColor(uint16_t color) {
     trueColor |= 0xFF000000;
     
     return trueColor;
+}
+
+static void drawImageNbitMasked(const uint8_t *data, int x, int y, int w, int h, const color_t* palette, color_t maskColor, unsigned int bitWidth)
+{
+    color_t* VRAM = (color_t*) GetVRAMAddress();
+    VRAM += (LCD_WIDTH_PX*y + x);
+    int offset = 0;
+    uint8_t buf = 0;
+    for(int j=y; j<y+h; j++) {
+        int availbits = 0;
+        for(int i=x; i<x+w; i++) {
+            if (!availbits) {
+                buf = data[offset++];
+                availbits = 8;
+            }
+            uint16_t self = ((uint16_t)buf>>(8-bitWidth));
+            uint16_t color = palette[self];
+            if(color != maskColor) {
+                *VRAM = color;
+            }
+            VRAM++;
+            buf <<= bitWidth;
+            availbits -= bitWidth;
+        }
+        VRAM += (LCD_WIDTH_PX - w);
+    }
 }
 
 void fxCG_DisplayRedraw( void *pixelData )

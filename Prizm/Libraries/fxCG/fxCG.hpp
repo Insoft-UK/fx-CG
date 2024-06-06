@@ -32,11 +32,13 @@
 #ifndef __clang__
 #define g3a main
 #include <fxcg/display.h>
+#include <fxcg/keyboard.h>
 #include <fxcg/system.h>
 #include <fxcg/heap.h>
 #include <fxcg/file.h>
 #else
 #include "fxcg/display.h"
+#include "fxcg/keyboard.h"
 #include "fxcg/system.h"
 #include "fxcg/heap.h"
 #include "fxcg/file.h"
@@ -66,6 +68,16 @@ extern "C" int g3a(void);
 #define sys_free free
 #endif
 
+#define SAF_BATTERY             0x0001
+#define SAF_ALPHA_SHIFT         0x0002
+#define SAF_SETUP_INPUT_OUTPUT  0x0004
+#define SAF_SETUP_FRAC_RESULT   0x0008
+#define SAF_SETUP_ANGLE         0x0010
+#define SAF_SETUP_COMPLEX_MODE  0x0020
+#define SAF_SETUP_DISPLAY       0x0040
+#define SAF_TEXT                0x0100
+#define SAF_GLYPH               0x0200
+
 namespace fxCG {
 
 enum Screen : uint16_t {
@@ -84,7 +96,8 @@ enum Color : color_t {
     white   = 0xFFFF
 };
 
-void enableColor();
+void enableFullColorMode();
+void disableFullColorMode();
 void clearDisplay(color_t color);
 
 /**

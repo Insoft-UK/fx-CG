@@ -21,29 +21,75 @@
  */
 
 #include "fxcg/rtc.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <sys/time.h>
+
+
+typedef struct {
+    struct timespec start_time;
+} RTC_Timer;
+
+static void RTC_StartTimer(RTC_Timer* timer) {
+    clock_gettime(CLOCK_MONOTONIC, &timer->start_time);
+}
 
 int RTC_Reset( int r )
 {
     return 0;
 }
 
-void RTC_SetDateTime( unsigned char*timestr )
-{
 
+void RTC_SetDateTime(unsigned char* timestr) {
+    struct tm tm;
+    struct timeval tv;
+
+    // Parse the input string
+    if (strptime((const char*)timestr, "%Y-%m-%d %H:%M:%S", &tm) == NULL) {
+        fprintf(stderr, "Failed to parse time string\n");
+        return;
+    }
+
+    // Convert to time_t and set the timeval struct
+    tv.tv_sec = mktime(&tm);
+    tv.tv_usec = 0;
+
+    // Set the system time
+    if (settimeofday(&tv, NULL) != 0) {
+        perror("settimeofday");
+    }
 }
 
-//Get information from/based on the RTC:
 void RTC_GetTime( unsigned int*hour, unsigned int*minute, unsigned int*second, unsigned int*millisecond )
 {
-    
+    struct timespec ts;
+        struct tm tm;
+        clock_gettime(CLOCK_REALTIME, &ts);  // Get the current time
+        localtime_r(&ts.tv_sec, &tm);  // Convert to local time
+        
+        *hour = tm.tm_hour;
+        *minute = tm.tm_min;
+        *second = tm.tm_sec;
+        *millisecond = (unsigned int)(ts.tv_nsec / 1000000);  // Convert nanoseconds to milliseconds
 }
 
 int RTC_GetTicks(void)
 {
-    return 0;
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return (int)(ts.tv_sec * 1000 + ts.tv_nsec / 1000000);
 }
 
 int RTC_Elapsed_ms( int start_value, int duration_in_ms )
 {
-    return 0;
+    struct timespec end_time;
+    clock_gettime(CLOCK_MONOTONIC, &end_time);
+    
+    unsigned long start_ms = start_value;
+    unsigned long end_ms = end_time.tv_sec * 1000 + end_time.tv_nsec / 1000000;
+
+    return end_ms - start_ms >= duration_in_ms;
 }
+

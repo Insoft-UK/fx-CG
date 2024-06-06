@@ -52,8 +52,14 @@ typedef struct FXCG_DDRegister {
 } FXCG_DDRegister;
 #pragma pack()   /* restore original alignment from stack */
 
+extern uint16_t _fxCG_SAF;
+extern bool _fxCG_KMI_Shift;
+extern bool _fxCG_KMI_Alpha;
+extern bool _fxCG_KMI_Clip;
+
 extern uint16_t _fxCG_0xFD801460;
-extern uint16_t _fxCG_0xA44B0000[5];
+extern uint16_t _fxCG_0xA44B0000[6];
+
 extern FXCG_DDRegister _fxCG_DDRegister;
 extern uint16_t _fxCG_DRAM[ 396 * 224 ];
 extern uint16_t _fxCG_VRAM[ 384 * 216 ];

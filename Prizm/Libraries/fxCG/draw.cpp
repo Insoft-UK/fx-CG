@@ -31,6 +31,19 @@
 
 using namespace fxCG;
 
+// Global variable to track the state of half opacity drawing.
+static bool is_half_opacity_enabled = false;
+
+void draw::enableHalfOpacityDrawing()
+{
+    is_half_opacity_enabled = true;
+}
+
+void draw::disableHalfOpacityDrawing()
+{
+    is_half_opacity_enabled = false;
+}
+
 /**
  @brief    Draw a perfectly horizontal line (this is often optimized in a subclass!)
  @param    x   Left-most x coordinate
@@ -42,6 +55,7 @@ static void fxDrawFastHLine(unsigned x, unsigned y, unsigned w, color_t color)
 {
     if (y > 215) return;
     color_t *VRAM = (color_t *)GetVRAMAddress();
+    unsigned opacity = y & 1;
     while (w--) {
         VRAM[x + y * 384] = color;
         if (++x > 383) return;
@@ -79,14 +93,26 @@ void draw::line(int x1, int y1, int x2, int y2, color_t color)
     if (x1 == x2) {
         if (y1 > y2)
             swap(&y1, &y2);
-        fxDrawFastVLine(x1, y1, y2 - y1 + 1, color);
+        if (!is_half_opacity_enabled) {
+            fxDrawFastVLine(x1, y1, y2 - y1 + 1, color);
+            return;
+        }
+        for (; y1 < y2; y1++)
+            pixel(x1, y1, color);
+        
         return;
     }
     
     if (y1 == y2) {
         if (x1 > x2)
             swap(&x1, &x2);
-        fxDrawFastHLine(x1, y1, x2 - x1 + 1, color);
+        if (!is_half_opacity_enabled) {
+            fxDrawFastHLine(x1, y1, x2 - x1 + 1, color);
+            return;
+        }
+        for (; x1 < x2; x1++)
+            pixel(x1, y1, color);
+        
         return;
     }
     
@@ -417,12 +443,13 @@ void draw::fillArea(unsigned x, unsigned y, unsigned w, unsigned h, color_t colo
 {
     if (x > 383 || y > 215) return;
     uint16_t *VRAM = (uint16_t*)GetVRAMAddress();
-    VRAM += y * 384 + x;
     while(h--){
         unsigned w2 = w;
-        while(w2--)
-            *VRAM++ = color;
-        VRAM += 384 - w;
+        while(w2--) {
+            pixel(x++, y, color);
+        }
+        x -= w;
+        y += 1;
     }
 }
 
@@ -432,11 +459,15 @@ void draw::pixel(int x, int y, color_t color)
     if (x < 0 || y < 0) return;
     if (x > 383 || y > 215) return;
     uint16_t *VRAM = (uint16_t *)GetVRAMAddress();
+    if (is_half_opacity_enabled == true) {
+        if (x & 1 && y & 1) return;
+        if (!(x & 1) && !(y & 1)) return;
+    }
     VRAM[x + y * 384] = color;
 }
 
 
-void draw::sprite(uint16_t* data, int x, int y, int w, int h)
+void draw::image(uint16_t* data, int x, int y, int w, int h)
 {
     uint16_t *VRAM = (uint16_t*)GetVRAMAddress();
     VRAM += 384*y + x;
@@ -449,7 +480,7 @@ void draw::sprite(uint16_t* data, int x, int y, int w, int h)
 }
 
 
-void draw::spriteMaskedAlpha(uint16_t* data, int x, int y, int w, int h, color_t maskColor, int alpha)
+void draw::imageMaskedAlpha(uint16_t* data, int x, int y, int w, int h, color_t maskColor, int alpha)
 {
     uint16_t* VRAM = (uint16_t*)GetVRAMAddress();
     VRAM += LCD_WIDTH_PX*y + x;
@@ -469,7 +500,7 @@ void draw::spriteMaskedAlpha(uint16_t* data, int x, int y, int w, int h, color_t
 }
 
 
-void draw::spriteNbit(const uint8_t* data, int x, int y, int w, int h, color_t* palette, unsigned int bitWidth)
+void draw::imageNbit(const uint8_t* data, int x, int y, int w, int h, color_t* palette, unsigned int bitWidth)
 {
     color_t* VRAM = (color_t*) GetVRAMAddress();
     VRAM += (LCD_WIDTH_PX*y + x);
@@ -493,7 +524,7 @@ void draw::spriteNbit(const uint8_t* data, int x, int y, int w, int h, color_t* 
 }
 
 
-void draw::spriteNbitMasked(const uint8_t *data, int x, int y, int w, int h, const color_t* palette, color_t maskColor, unsigned int bitWidth)
+void draw::imageNbitMasked(const uint8_t *data, int x, int y, int w, int h, const color_t* palette, color_t maskColor, unsigned int bitWidth)
 {
     color_t* VRAM = (color_t*) GetVRAMAddress();
     VRAM += (LCD_WIDTH_PX*y + x);

@@ -35,34 +35,22 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "draw.hpp"
+
 using namespace fxCG;
+using namespace draw;
 
-void input::drawCursor(int x, int y, bool shift, bool alpha, char curchar)
+void input::drawCursor(int x, int y, int mode)
 {
-    char buf[5] = "XX \0";
-    buf[2] = curchar;
-    
-    if (!curchar) {
-        if (!shift && !alpha) {
-            PrintXY(x, y, buf, 1, TEXT_COLOR_BLACK);
-            Bdisp_PutDisp_DD();
-            return;
-        }
-        
-        if (shift) {
-            buf[2] = 0xE5;
-            buf[3] = 0xEA;
-        } else if (alpha) {
-            buf[2] = 0xE5;
-            buf[3] = 0x9F;
-        } else {
-            buf[2] = 0xE7;
-            buf[3] = 0xAE;
-        }
+    static int t = 0;
+    switch (mode) {
+        case 0:
+            rect(x, y + 1, 16, 22, 0);
+            break;
     }
-
-    PrintXY(x, y, buf, 0, TEXT_COLOR_BLACK);
-    Bdisp_PutDisp_DD();
+    
+    fillArea(x, y, 2, 24, 0);
+       
 }
 
 int input::getLine(char* buf, int maxstrlen, int x, int y, int maxdisplen, unsigned short inmode) {
@@ -112,7 +100,7 @@ int input::getLine(char* buf, int maxstrlen, int x, int y, int maxdisplen, unsig
         dispcharbuf[2+i] = '\0';            //null terminate it
         PrintXY(x,y,dispcharbuf,0,TEXT_COLOR_BLACK);
         cursorstate = 1;
-        drawCursor(x+(stroffset-dispoffset),y,shiftmode,alphamode,dispcharbuf[2+stroffset-dispoffset]);
+//        drawCursor(x+(stroffset-dispoffset),y,shiftmode,alphamode,dispcharbuf[2+stroffset-dispoffset]);
 
         bool redraw = false;
         do {
@@ -125,7 +113,7 @@ int input::getLine(char* buf, int maxstrlen, int x, int y, int maxdisplen, unsig
                 //erase the cursor and switch it back to the letter here
                 cursorstate = 0;
                 cursorchangetime = RTC_GetTicks();
-                drawCursor(x+(stroffset-dispoffset),y,shiftmode,alphamode,dispcharbuf[2+stroffset-dispoffset]);
+//                drawCursor(x+(stroffset-dispoffset),y,shiftmode,alphamode,dispcharbuf[2+stroffset-dispoffset]);
 
                 if (krow == 10 || key == KEY_PRGM_UP || key == KEY_PRGM_DOWN || key == KEY_PRGM_RETURN)
                     return key;
@@ -238,9 +226,9 @@ int input::getLine(char* buf, int maxstrlen, int x, int y, int maxdisplen, unsig
                 cursorstate = 1-cursorstate;
                 cursorchangetime = RTC_GetTicks();
                 if (cursorstate) {
-                    drawCursor(x+(stroffset-dispoffset),y,shiftmode,alphamode,dispcharbuf[2+stroffset-dispoffset]);
+//                    drawCursor(x+(stroffset-dispoffset),y,shiftmode,alphamode,dispcharbuf[2+stroffset-dispoffset]);
                 } else {
-                    drawCursor(x+(stroffset-dispoffset),y,shiftmode,alphamode,NULL);
+//                    drawCursor(x+(stroffset-dispoffset),y,shiftmode,alphamode,NULL);
                 }
             }
         } while (!redraw && !finished);

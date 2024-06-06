@@ -22,7 +22,12 @@
 
 #include "fxCG.hpp"
 
-void fxCG::enableColor()
+void fxCG::disableFullColorMode()
+{
+    Bdisp_EnableColor(0);
+}
+
+void fxCG::enableFullColorMode()
 {
     Bdisp_EnableColor(1);
 }
