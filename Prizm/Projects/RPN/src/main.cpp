@@ -275,7 +275,7 @@ public:
                         break;
                         
                     case KEY_PRGM_RIGHT:
-                        if (++cursor > strlen(buf)) cursor = 0;
+                        if (++cursor > (short)strlen(buf)) cursor = 0;
                         shift = false;
                         break;
                         

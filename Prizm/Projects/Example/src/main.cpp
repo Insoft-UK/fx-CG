@@ -49,37 +49,43 @@ int g3a(void)
     fxCG::enableFullColorMode();
     fxCG::clearDisplay(black);
     
-    char *buf = 0;
+    char buf[1024];
     
     const char16_t *name = u"\\\\fls0\\README.txt";
     int file =  Bfile_OpenFile((unsigned short *)name, kOpenMode_Read);
     if (file != -1) {
         int size = Bfile_GetFileSize(file);
-        buf = (char *)sys_malloc(size);
-        if (buf) {
-            Bfile_ReadFile(file, buf, size, 0);
-        }
+        Bfile_ReadFile(file, buf, size, 0);
         Bfile_CloseFile(file);
     }
     
+    int key;
     loop {
         key::update();
         clearDisplay(white);
 
-        if (isHeld(Exit)) {
-            print(0, 16 * 4, buf, black, C437);
-        }
-        
-        
-        if (isPressed(Menu))
-            break;
         
         
         updateDisplay();
+        GetKey(&key);
+        
+        if (key == 0x7532) {
+            print(0, 16 * 4, buf, black, C437);
+        }
+        
+//        int col = 0, row = 0;
+//        unsigned short key = 0;
+//        int retval = GetKeyWait_OS(&col, &row, KEYWAIT_HALTON_TIMERON, 1, 0, &key);
+//        
+//        if (retval == KEYREP_KEYEVENT) {
+//            
+//        }
+        
+        
+       
         wait(40);
     }
     
-    if (buf) sys_free(buf);
     
     return 0;
 }

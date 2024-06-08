@@ -100,6 +100,7 @@ uint16_t* key::reg(void)
     return (uint16_t *)FXCG50_KEY_REG;
 }
 
+
 void key::update(void)
 {
     for (int i=0; i<5; i++) {

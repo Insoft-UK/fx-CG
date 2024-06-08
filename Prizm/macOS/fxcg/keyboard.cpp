@@ -163,7 +163,7 @@ static const unsigned short CC_Shift[] = {
     0x000D    // EXE
 };
 
-void PRGM_GetKey_OS(unsigned char* p )
+void PRGM_GetKey_OS(unsigned char* p)
 {
     memcpy(p, _fxCG_0xA44B0000, 12);
 }
