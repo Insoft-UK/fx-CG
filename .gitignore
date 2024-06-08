@@ -3,7 +3,10 @@ xcuserdata/
 .DS_Store
 *.gz
 bin/*
-#SDK/Installer/gcc
+SDK/Install.sh
+SDK/Update.sh
+SDK/Installer/
+SDK/Update/
 Prizm/Projects/fx-CG/
 Prizm/Projects/Ratio/
 Prizm/Projects/Charset/
