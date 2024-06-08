@@ -1063,8 +1063,9 @@ void UI_Fn(int n, const char *s, FnType type) {
 
 void quitHandler(void)
 {
-    FrameColor(FXCGFrameModeSetToColor, white);
-    DrawFrame(white);
+    FrameColor(FrameModeSetToColor, 0xFFFF);
+    DrawFrame(0xFFFF);
+    EnableStatusArea(0);
 }
 
 // MARK: - CASIO fxCG Add-In Application "main" Function
@@ -1076,20 +1077,17 @@ int g3a(void)
     Bdisp_EnableColor(1);
     
     // Sets the screen border color to black.
-    FrameColor(FXCGFrameModeSetToColor, black);
-    DrawFrame(black);
+    FrameColor(FrameModeSetToColor, 0);
+    DrawFrame(0);
+    
+    EnableStatusArea(3);
     
     DrawShuttle();
     updateDisplay();
-    key::reset();
+    int key;
     
     loop {
-        key::update();
-        if (key::isPressed(key::Menu)) {
-            key::reset();
-            break;
-        }
-        wait(40);
+        GetKey(&key);
     }
     
     return 0;

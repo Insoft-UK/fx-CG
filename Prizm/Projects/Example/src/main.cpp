@@ -33,7 +33,7 @@ using namespace font;
 
 void quitHandler(void)
 {
-    FrameColor(FXCGFrameModeSetToColor, white);
+    FrameColor(FrameModeSetToColor, white);
     DrawFrame(white);
 }
 
@@ -42,11 +42,11 @@ int g3a(void)
 {
     SetQuitHandler(quitHandler);
     
-    FrameColor(FXCGFrameModeSetToColor, black);
+    FrameColor(FrameModeSetToColor, black);
     DrawFrame(black);
     
     /// Switches the screen to full color mode (16 bits per pixel, RGB565)
-    fxCG::enableColor();
+    fxCG::enableFullColorMode();
     fxCG::clearDisplay(black);
     
     char *buf = 0;

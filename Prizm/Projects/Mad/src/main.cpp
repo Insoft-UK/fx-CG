@@ -164,25 +164,16 @@ static int data[] = {
     999
 };
 
-int Splash(void) {
+void Splash(void) {
     draw::fillArea(0, 0, LCD_WIDTH_PX, LCD_HEIGHT_PX, white);
    
-    font::print((width - strlen("PRESS [EXE] KEY") * 8) / 2, height - 32, "PRESS [EXE] KEY", black, C437);
+    font::print((width - strlen("PRESS ANY KEY") * 8) / 2, height - 32, "PRESS ANY KEY", black, C437);
     font::print((width - strlen(COPYRIGHT) * 8) / 2, height - 16, COPYRIGHT, black, C437);
     updateDisplay();
     key::reset();
     
-    while (true) {
-        key::update();
-        
-        if (key::isPressed(key::Return))
-            return 0;
-        
-        if (key::isPressed(key::Menu))
-            return -1;
-    }
-    
-    return 0;
+    int key;
+    GetKey(&key);
 }
 
 void Draw(void) {
@@ -214,31 +205,34 @@ void Draw(void) {
     updateDisplay();
 }
 
-extern void *FontBytes(void);
-
+void quitHandler(void)
+{
+    FrameColor(FrameModeSetToColor, white);
+    DrawFrame(white);
+    disableFullColorMode();
+    EnableStatusArea(0);
+}
 
 // MARK: - CASIO fxCG Add-In Application "main" Function
 int g3a(void) {
     
-    // Switches the screen to full color mode (16 bits per pixel, RGB565)
-    enableColor();
+    SetQuitHandler(quitHandler);
     
-    if (Splash() == -1) return 0;
+    enableFullColorMode();
+    EnableStatusArea(3);
+    
+    Splash();
     
     // Sets the screen border color to black.
-    FrameColor(FXCGFrameModeSetToColor, green);
+    FrameColor(FrameModeSetToColor, green);
     DrawFrame(green);
+   
     Draw();
     
-    while (true) {
-        key::update();
-        
-        if (key::isPressed(key::Exit) | key::isPressed(key::Menu))
-            break;
+    int key;
+    loop {
+        GetKey(&key);
     }
-    
-    // Sets the screen border color back to white.
-    FrameColor(FXCGFrameModeSetToColor, white);
-    DrawFrame(white);
+
     return 0;
 }
